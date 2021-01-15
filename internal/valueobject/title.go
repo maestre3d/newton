@@ -17,15 +17,13 @@ var ErrTitleOutOfRange = errors.New("title is out of range [1, 256)")
 
 // NewTitle creates and validates a Title
 func NewTitle(v string) (*Title, error) {
-	t := new(Title)
-	if err := t.ensureLength(v); err != nil {
+	if err := ensureTitleLength(v); err != nil {
 		return nil, err
 	}
-	t.value = v
-	return t, nil
+	return &Title{value: v}, nil
 }
 
-func (t Title) ensureLength(v string) error {
+func ensureTitleLength(v string) error {
 	if len(v) < titleMinLength || len(v) > titleMaxLength {
 		return ErrTitleOutOfRange
 	}

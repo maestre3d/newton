@@ -20,15 +20,13 @@ var ErrBookIDOutOfRange = errors.New("book id is out of range [16, 128)")
 
 // NewBookID creates and validates a BookID
 func NewBookID(v string) (*BookID, error) {
-	id := new(BookID)
-	if err := id.ensureLength(v); err != nil {
+	if err := ensureBookIDLength(v); err != nil {
 		return nil, err
 	}
-	id.value = v
-	return id, nil
+	return &BookID{value: v}, nil
 }
 
-func (i BookID) ensureLength(v string) error {
+func ensureBookIDLength(v string) error {
 	if len(v) < bookIDMinLength || len(v) > bookIDMaxLength {
 		return ErrBookIDOutOfRange
 	}

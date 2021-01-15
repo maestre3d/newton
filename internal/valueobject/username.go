@@ -18,15 +18,13 @@ const (
 var ErrUsernameOutOfRange = errors.New("username is out of range [1, 128)")
 
 func NewUsername(v string) (*Username, error) {
-	u := new(Username)
-	if err := u.ensureLength(v); err != nil {
+	if err := ensureUsernameLength(v); err != nil {
 		return nil, err
 	}
-	u.value = v
-	return u, nil
+	return &Username{value: v}, nil
 }
 
-func (u Username) ensureLength(v string) error {
+func ensureUsernameLength(v string) error {
 	if len(v) < usernameMinLength || len(v) > usernameMaxLength {
 		return ErrUsernameOutOfRange
 	}
