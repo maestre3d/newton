@@ -12,7 +12,7 @@ type Book struct {
 	// Book's display name
 	Title valueobject.Title
 	// User's username who uploaded this book, since usernames are unique and immutable, high-cardinality is ensured
-	Uploader string
+	Uploader valueobject.Username
 	// Potential data replication/projection. Use IN statement query to lookup inside this field
 	Authors     []string
 	PublishYear int
