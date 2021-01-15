@@ -9,6 +9,7 @@ Note that _Newton_ only supports the two most recent minor versions of Go.
 
 ### Used Infrastructure and 3rd-party software
 - Hashicorp Terraform
+- Hashicorp Vault
 
 **Amazon Web Services (AWS)**
 - CLi v2
