@@ -12,9 +12,10 @@ Note that _Newton_ only supports the two most recent minor versions of Go.
 
 **Amazon Web Services (AWS)**
 - CLi v2
-- Lambda
-- DynamoDB (+ DAX)
+- Lambda _(+ Lambda@edge)_
+- DynamoDB _(+ DAX)_
 - S3
+- EventBridge
 - SNS
 - SQS
 - SES
@@ -22,6 +23,9 @@ Note that _Newton_ only supports the two most recent minor versions of Go.
 - CloudFront
 - ACM
 - Route53
+- AppSync
+- Systems Manager _(Parameter store)_
+- API Gateway
 - CloudWatch
 - CloudTrail
 - X-Ray
