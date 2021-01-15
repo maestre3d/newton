@@ -6,7 +6,7 @@ import (
 	"github.com/maestre3d/newton/internal/event"
 )
 
-// Listener subscribes to a domain event in order to execute tasks asynchronously and independently
+// Listener subscribes to a domain event in order to execute independent tasks asynchronously
 type Listener interface {
 	// SubscribedTo returns the event.DomainEvent this specific listener is subscribed to
 	SubscribedTo() event.DomainEvent
