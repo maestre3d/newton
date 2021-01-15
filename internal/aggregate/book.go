@@ -17,9 +17,9 @@ type Book struct {
 	// S3 url media reference
 	Resource valueobject.BookResource
 	// S3 url Book's cover image reference
-	Cover string
+	Cover valueobject.Cover
 	// Potential data replication/projection
-	Authors []string
+	Authors []valueobject.AuthorID
 	// Potential data replication/projection
 	Categories []string
 	CreateTime time.Time
