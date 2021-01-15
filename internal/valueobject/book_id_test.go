@@ -38,3 +38,12 @@ func TestNewBookID(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkNewBookID(b *testing.B) {
+	b.Run("Bench New book id", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			_, _ = NewBookID(gonanoid.Must(16))
+		}
+	})
+}

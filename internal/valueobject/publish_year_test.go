@@ -31,3 +31,12 @@ func TestNewPublishYear(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkNewPublishYear(b *testing.B) {
+	b.Run("Bench New publish year", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			_, _ = NewPublishYear(1984)
+		}
+	})
+}
