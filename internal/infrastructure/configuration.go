@@ -30,7 +30,7 @@ func NewConfiguration() Configuration {
 const (
 	// ProdStage Production deployment stage
 	ProdStage = "prod"
-	// Dev Development deployment stage
+	// DevStage Development deployment stage
 	DevStage = "dev"
 )
 
