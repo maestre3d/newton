@@ -10,23 +10,23 @@ type BookID struct {
 	value string
 }
 
-// NewBookID creates and validates a new BookID
+const (
+	bookIDMinLength = 16
+	bookIDMaxLength = 128
+)
+
+// ErrBookIDOutOfRange the given book id character length is out of range, use gonanoid.New(16)
+var ErrBookIDOutOfRange = errors.New("book id is out of range [16, 128)")
+
+// NewBookID creates and validates a BookID
 func NewBookID(v string) (*BookID, error) {
-	id := &BookID{}
+	id := new(BookID)
 	if err := id.ensureLength(v); err != nil {
 		return nil, err
 	}
 	id.value = v
 	return id, nil
 }
-
-const (
-	bookIDMinLength = 16
-	bookIDMaxLength = 128
-)
-
-// ErrBookIDOutOfRange the given book id length is out of range, use gonanoid.New(16)
-var ErrBookIDOutOfRange = errors.New("book id is out of range [16, 128)")
 
 func (i BookID) ensureLength(v string) error {
 	if len(v) < bookIDMinLength || len(v) > bookIDMaxLength {
