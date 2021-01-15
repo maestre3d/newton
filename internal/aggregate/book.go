@@ -10,7 +10,7 @@ import (
 type Book struct {
 	ID valueobject.BookID
 	// Book's display name
-	Title string
+	Title valueobject.Title
 	// User's username who uploaded this book, since usernames are unique and immutable, high-cardinality is ensured
 	Uploader string
 	// Potential data replication/projection. Use IN statement query to lookup inside this field
