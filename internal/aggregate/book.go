@@ -14,14 +14,14 @@ type Book struct {
 	// User's username who uploaded this book, since usernames are unique and immutable, high-cardinality is ensured
 	Uploader    valueobject.Username
 	PublishYear valueobject.PublishYear
-	// Potential data replication/projection. Use IN statement query to lookup inside this field
+	// S3 url media reference
+	Resource valueobject.BookResource
+	// S3 url Book's cover image reference
+	Cover string
+	// Potential data replication/projection
 	Authors []string
 	// Potential data replication/projection
 	Categories []string
-	// S3 url Book's cover image reference
-	Cover string
-	// S3 url media reference
-	ExternalLink string
-	CreateTime   time.Time
-	UpdateTime   time.Time
+	CreateTime time.Time
+	UpdateTime time.Time
 }

@@ -1,0 +1,39 @@
+package valueobject
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+var bookResourceTestingSuite = []struct {
+	in  string
+	exp error
+}{
+	{"", ErrBookResourceInvalidURL},
+	{"foo.com/", ErrBookResourceOutOfRange}, // will be above 2000 char long
+	{"a.c/", ErrBookResourceOutOfRange},
+	{"aex.", ErrBookResourceInvalidURL},
+	{"aex12com", ErrBookResourceInvalidURL},
+	{"https://cdn.newton.neutrinocorp.org", ErrBookResourceInvalidURL},
+	{"https://cdn.newton.neutrinocorp.org/books/123.pptx", ErrBookResourceInvalidExtension},
+	{"https://cdn.newton.neutrinocorp.org/books/123.docx", ErrBookResourceInvalidExtension},
+	{"https://cdn.newton.neutrinocorp.org/books/123.pdf", nil},
+	{"foo.com/", nil}, // will be 2000 char long
+}
+
+func TestNewBookResource(t *testing.T) {
+	for i, tt := range bookResourceTestingSuite {
+		if i == 1 {
+			tt.in += populateString(1989)
+			tt.in += ".pdf"
+		} else if i == 9 {
+			tt.in += populateString(1988)
+			tt.in += ".pdf"
+		}
+		t.Run("New book resource", func(t *testing.T) {
+			_, err := NewBookResource(tt.in)
+			assert.Equal(t, tt.exp, err)
+		})
+	}
+}
