@@ -29,6 +29,7 @@ Note that _Newton_ only supports the two most recent minor versions of Go.
 - CloudWatch
 - CloudTrail
 - X-Ray
+- IAM
 
 See the [documentation][docs] and [FAQ](FAQ.md) for more details.
 
