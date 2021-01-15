@@ -32,8 +32,12 @@ func TestNewBookResource(t *testing.T) {
 			tt.in += ".pdf"
 		}
 		t.Run("New book resource", func(t *testing.T) {
-			_, err := NewBookResource(tt.in)
-			assert.Equal(t, tt.exp, err)
+			r, err := NewBookResource(tt.in)
+			if err != nil {
+				assert.Equal(t, tt.exp, err)
+				return
+			}
+			assert.Equal(t, tt.in, r.Value())
 		})
 	}
 }

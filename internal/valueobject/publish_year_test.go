@@ -22,8 +22,12 @@ var publishYearTestingSuite = []struct {
 func TestNewPublishYear(t *testing.T) {
 	for _, tt := range publishYearTestingSuite {
 		t.Run("New publish year", func(t *testing.T) {
-			_, err := NewPublishYear(tt.in)
-			assert.Equal(t, tt.exp, err)
+			y, err := NewPublishYear(tt.in)
+			if err != nil {
+				assert.Equal(t, tt.exp, err)
+				return
+			}
+			assert.Equal(t, tt.in, y.Value())
 		})
 	}
 }

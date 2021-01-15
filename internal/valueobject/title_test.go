@@ -25,8 +25,12 @@ func TestNewTitle(t *testing.T) {
 			tt.in = populateString(256)
 		}
 		t.Run("New title", func(t *testing.T) {
-			_, err := NewTitle(tt.in)
-			assert.Equal(t, tt.exp, err)
+			title, err := NewTitle(tt.in)
+			if err != nil {
+				assert.Equal(t, tt.exp, err)
+				return
+			}
+			assert.Equal(t, tt.in, title.Value())
 		})
 	}
 }

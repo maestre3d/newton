@@ -29,8 +29,12 @@ func TestNewBookID(t *testing.T) {
 		}
 
 		t.Run("New book id", func(t *testing.T) {
-			_, err := NewBookID(tt.in)
-			assert.Equal(t, tt.exp, err)
+			id, err := NewBookID(tt.in)
+			if err != nil {
+				assert.Equal(t, tt.exp, err)
+				return
+			}
+			assert.Equal(t, tt.in, id.Value())
 		})
 	}
 }

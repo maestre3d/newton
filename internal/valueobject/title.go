@@ -29,3 +29,8 @@ func ensureTitleLength(v string) error {
 	}
 	return nil
 }
+
+// Value get the current value
+func (t Title) Value() string {
+	return t.value
+}

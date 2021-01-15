@@ -30,3 +30,8 @@ func ensureUsernameLength(v string) error {
 	}
 	return nil
 }
+
+// Value get the current value
+func (u Username) Value() string {
+	return u.value
+}

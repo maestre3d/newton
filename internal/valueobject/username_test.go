@@ -25,8 +25,12 @@ func TestNewUsername(t *testing.T) {
 			tt.in = populateString(128)
 		}
 		t.Run("New username", func(t *testing.T) {
-			_, err := NewUsername(tt.in)
-			assert.Equal(t, tt.exp, err)
+			u, err := NewUsername(tt.in)
+			if err != nil {
+				assert.Equal(t, tt.exp, err)
+				return
+			}
+			assert.Equal(t, tt.in, u.Value())
 		})
 	}
 }

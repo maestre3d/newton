@@ -33,3 +33,8 @@ func ensureBookIDLength(v string) error {
 
 	return nil
 }
+
+// Value get the current value
+func (i BookID) Value() string {
+	return i.value
+}

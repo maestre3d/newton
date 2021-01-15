@@ -32,3 +32,8 @@ func ensurePublishYearLength(v int) error {
 	}
 	return nil
 }
+
+// Value get the current value
+func (y PublishYear) Value() int {
+	return y.value
+}

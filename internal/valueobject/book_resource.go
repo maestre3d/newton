@@ -43,3 +43,8 @@ func ensureBookResourceValidExtension(v string) error {
 	}
 	return nil
 }
+
+// Value get the current value
+func (r BookResource) Value() string {
+	return r.value
+}
