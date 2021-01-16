@@ -39,10 +39,17 @@ func TestNewAuthorID(t *testing.T) {
 }
 
 func BenchmarkNewAuthorID(b *testing.B) {
+	id := gonanoid.Must(16)
 	b.Run("Bench New author id", func(b *testing.B) {
+		var v *AuthorID
+		defer func() {
+			// avoids v non-used
+			if v != nil {
+			}
+		}()
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			_, _ = NewAuthorID(gonanoid.Must(16))
+			v, _ = NewAuthorID(id)
 		}
 	})
 }

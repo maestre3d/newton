@@ -37,9 +37,14 @@ func TestNewUsername(t *testing.T) {
 
 func BenchmarkNewUsername(b *testing.B) {
 	b.Run("Bench New username", func(b *testing.B) {
+		var v *Username
+		defer func() {
+			if v != nil {
+			}
+		}()
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			_, _ = NewCover("br1arevalo")
+			v, _ = NewUsername("br1arevalo")
 		}
 	})
 }

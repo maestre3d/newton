@@ -37,9 +37,14 @@ func TestNewTitle(t *testing.T) {
 
 func BenchmarkNewTitle(b *testing.B) {
 	b.Run("Bench New title", func(b *testing.B) {
+		var v *Title
+		defer func() {
+			if v != nil {
+			}
+		}()
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			_, _ = NewTitle("Statistical Thermodynamics")
+			v, _ = NewTitle("Statistical Thermodynamics")
 		}
 	})
 }

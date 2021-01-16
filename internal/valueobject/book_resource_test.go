@@ -44,9 +44,14 @@ func TestNewBookResource(t *testing.T) {
 
 func BenchmarkNewBookResource(b *testing.B) {
 	b.Run("Bench New book resource", func(b *testing.B) {
+		var v *BookResource
+		defer func() {
+			if v != nil {
+			}
+		}()
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			_, _ = NewBookResource("https://cdn.newton.neutrinocorp.org/books/123.pdf")
+			v, _ = NewBookResource("https://cdn.newton.neutrinocorp.org/books/123.pdf")
 		}
 	})
 }
