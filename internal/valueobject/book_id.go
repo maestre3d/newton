@@ -27,7 +27,7 @@ func NewBookID(v string) (*BookID, error) {
 }
 
 func ensureBookIDLength(v string) error {
-	if len(v) < bookIDMinLength || len(v) > bookIDMaxLength {
+	if length := len(v); length < bookIDMinLength || length > bookIDMaxLength {
 		return ErrBookIDOutOfRange
 	}
 

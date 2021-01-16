@@ -16,20 +16,19 @@ type Book struct {
 }
 
 func (b Book) Create(ctx context.Context, id valueobject.BookID, title valueobject.Title, uploader valueobject.Username,
-	year valueobject.PublishYear, cover valueobject.Cover, authors []valueobject.AuthorID,
-	categories []valueobject.CategoryID) error {
+	year valueobject.PublishYear, image valueobject.Image) error {
 	if book, _ := b.GetByID(ctx, id); book != nil {
 		return aggregate.ErrBookAlreadyExists
 	}
 
-	book := aggregate.NewBook(id, title, uploader, year, cover, authors, categories)
+	book := aggregate.NewBook(id, title, uploader, year, image)
 	if err := b.repo.Save(ctx, *book); err != nil {
 		return err
 	} else if err := b.bus.Publish(ctx, book.PullEvents()...); err != nil {
 		// rollback
 		rCtx := ctx
 		go func() {
-			book.MarkedAsRemoval = true // avoids memory alloc
+			book.Metadata.MarkAsRemoval = true // avoids memory alloc, aggregate.Book.Remove() pushes a domain event
 			_ = b.repo.Save(rCtx, *book)
 		}()
 		return err
