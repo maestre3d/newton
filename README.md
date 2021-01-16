@@ -1,4 +1,4 @@
-# :book: Newton [![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov] [![Report Status][rep-img]][rep] [![Go Version][go-img]][go]
+# :book: Newton [![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov] [![Report Status][rep-img]][rep] [![Codebeat][beat-img]][beat] [![Go Version][go-img]][go]
 `Newton` is a cloud-native serverless application made for those who love books.
 
 ## Installation
@@ -55,6 +55,8 @@ Released under the [MIT License](LICENSE).
 [go]: https://github.com/maestre3d/newton/blob/master/go.mod
 [rep-img]: https://goreportcard.com/badge/github.com/maestre3d/newton
 [rep]: https://goreportcard.com/report/github.com/maestre3d/newton
+[beat-img]: https://codebeat.co/badges/4975a107-1936-49bf-a169-e5ba3bb90a6b
+[beat]: https://codebeat.co/projects/github-com-maestre3d-newton-master
 [cov-img]: https://codecov.io/gh/maestre3d/newton/branch/master/graph/badge.svg
 [cov]: https://codecov.io/gh/maestre3d/newton
 [maintainer]: https://github.com/maestre3d
