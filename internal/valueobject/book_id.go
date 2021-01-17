@@ -6,9 +6,7 @@ import (
 
 // BookID aggregate.Book unique identifier
 //	Prefer nano ids over UUIDs for performance purposes
-type BookID struct {
-	value string
-}
+type BookID string
 
 const (
 	bookIDMinLength = 16
@@ -19,11 +17,11 @@ const (
 var ErrBookIDOutOfRange = errors.New("book id is out of range [16, 128)")
 
 // NewBookID creates and validates a BookID
-func NewBookID(v string) (*BookID, error) {
+func NewBookID(v string) (BookID, error) {
 	if err := ensureBookIDLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &BookID{value: v}, nil
+	return BookID(v), nil
 }
 
 func ensureBookIDLength(v string) error {
@@ -36,5 +34,5 @@ func ensureBookIDLength(v string) error {
 
 // Value get the current value
 func (i BookID) Value() string {
-	return i.value
+	return string(i)
 }

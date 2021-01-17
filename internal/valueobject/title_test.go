@@ -37,9 +37,9 @@ func TestNewTitle(t *testing.T) {
 
 func BenchmarkNewTitle(b *testing.B) {
 	b.Run("Bench New title", func(b *testing.B) {
-		var v *Title
+		var v Title
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

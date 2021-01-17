@@ -9,7 +9,7 @@ import (
 	"github.com/maestre3d/newton/internal/valueobject"
 )
 
-// Book use case aggregate.Book atomic interactions
+// Book performs all the aggregate.Author use cases atomically
 type Book struct {
 	repo repository.Book
 	bus  event.Bus

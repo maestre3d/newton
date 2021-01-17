@@ -44,9 +44,9 @@ func TestNewBookResource(t *testing.T) {
 
 func BenchmarkNewBookResource(b *testing.B) {
 	b.Run("Bench New book resource", func(b *testing.B) {
-		var v *BookResource
+		var v BookResource
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

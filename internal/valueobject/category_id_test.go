@@ -41,9 +41,9 @@ func TestNewCategoryID(t *testing.T) {
 func BenchmarkNewCategoryID(b *testing.B) {
 	id := gonanoid.Must(16)
 	b.Run("Bench New category id", func(b *testing.B) {
-		var v *CategoryID
+		var v CategoryID
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

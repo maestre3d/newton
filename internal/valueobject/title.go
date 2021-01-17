@@ -3,9 +3,7 @@ package valueobject
 import "errors"
 
 // Title Book display name
-type Title struct {
-	value string
-}
+type Title string
 
 const (
 	titleMinLength = 1
@@ -16,11 +14,11 @@ const (
 var ErrTitleOutOfRange = errors.New("title is out of range [1, 256)")
 
 // NewTitle creates and validates a Title
-func NewTitle(v string) (*Title, error) {
+func NewTitle(v string) (Title, error) {
 	if err := ensureTitleLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &Title{value: v}, nil
+	return Title(v), nil
 }
 
 func ensureTitleLength(v string) error {
@@ -32,5 +30,5 @@ func ensureTitleLength(v string) error {
 
 // Value get the current value
 func (t Title) Value() string {
-	return t.value
+	return string(t)
 }

@@ -34,9 +34,9 @@ func TestNewPublishYear(t *testing.T) {
 
 func BenchmarkNewPublishYear(b *testing.B) {
 	b.Run("Bench New publish year", func(b *testing.B) {
-		var y *PublishYear
+		var y PublishYear
 		defer func() {
-			if y != nil {
+			if y != 0 {
 			}
 		}()
 		b.ReportAllocs()

@@ -1,6 +1,7 @@
 package aggregate
 
 import (
+	"errors"
 	"time"
 
 	"github.com/maestre3d/newton/internal/event"
@@ -18,6 +19,13 @@ type Author struct {
 	events   []event.DomainEvent
 }
 
+var (
+	// ErrAuthorNotFound the given Author was not found
+	ErrAuthorNotFound = errors.New("author not found")
+	// ErrAuthorAlreadyExists the given Author already exists
+	ErrAuthorAlreadyExists = errors.New("author already exists")
+)
+
 // NewAuthor creates and pushes events into an aggregate.Author
 func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy valueobject.Username,
 	image valueobject.Image) *Author {
@@ -28,10 +36,11 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 		CreateBy:    createBy,
 		Image:       image,
 		Metadata: valueobject.Metadata{
-			CreateTime:    currentTime,
-			UpdateTime:    currentTime,
-			State:         true,
-			MarkAsRemoval: false,
+			CreateTime:     currentTime,
+			UpdateTime:     currentTime,
+			State:          true,
+			MarkAsMutation: false,
+			MarkAsRemoval:  false,
 		},
 		events: []event.DomainEvent{
 			event.AuthorCreated{
@@ -46,14 +55,13 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 }
 
 // Update perform a bulk modification
-func (a *Author) Update(id valueobject.AuthorID, name valueobject.DisplayName, createBy valueobject.Username,
-	image valueobject.Image) {
+func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Username, image valueobject.Image) {
 	currentTime := time.Now().UTC()
-	a.ID = id
 	a.DisplayName = name
 	a.CreateBy = createBy
 	a.Image = image
 	a.Metadata.UpdateTime = currentTime
+	a.Metadata.MarkAsMutation = true
 	a.events = append(a.events, event.AuthorUpdated{
 		AuthorID:    a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),

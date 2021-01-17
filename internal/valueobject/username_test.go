@@ -37,9 +37,9 @@ func TestNewUsername(t *testing.T) {
 
 func BenchmarkNewUsername(b *testing.B) {
 	b.Run("Bench New username", func(b *testing.B) {
-		var v *Username
+		var v Username
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

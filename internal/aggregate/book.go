@@ -41,7 +41,7 @@ func NewBook(id valueobject.BookID, title valueobject.Title, uploader valueobjec
 		Title:       title,
 		Uploader:    uploader,
 		PublishYear: year,
-		Resource:    valueobject.BookResource{},
+		Resource:    "",
 		Image:       image,
 		Metadata: valueobject.Metadata{
 			CreateTime:    currentTime,

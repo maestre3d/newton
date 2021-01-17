@@ -6,9 +6,7 @@ import (
 )
 
 // PublishYear concrete year an aggregate.Book was published
-type PublishYear struct {
-	value int
-}
+type PublishYear int
 
 const publishYearMinValue = 0
 
@@ -19,11 +17,11 @@ var (
 )
 
 // NewPublishYear creates and validates a PublishYear
-func NewPublishYear(v int) (*PublishYear, error) {
+func NewPublishYear(v int) (PublishYear, error) {
 	if err := ensurePublishYearLength(v); err != nil {
-		return nil, err
+		return 0, err
 	}
-	return &PublishYear{value: v}, nil
+	return PublishYear(v), nil
 }
 
 func ensurePublishYearLength(v int) error {
@@ -35,5 +33,5 @@ func ensurePublishYearLength(v int) error {
 
 // Value get the current value
 func (y PublishYear) Value() int {
-	return y.value
+	return int(y)
 }

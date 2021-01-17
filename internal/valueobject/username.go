@@ -5,9 +5,7 @@ import "errors"
 // Username aggregate.User unique name identifier, it is immutable if used as single username
 //	Could be also used as preferred username.
 //	Hence, immutability wont be available when used as is
-type Username struct {
-	value string
-}
+type Username string
 
 const (
 	usernameMinLength = 1
@@ -17,11 +15,11 @@ const (
 // ErrUsernameOutOfRange the given username char length is out of range
 var ErrUsernameOutOfRange = errors.New("username is out of range [1, 128)")
 
-func NewUsername(v string) (*Username, error) {
+func NewUsername(v string) (Username, error) {
 	if err := ensureUsernameLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &Username{value: v}, nil
+	return Username(v), nil
 }
 
 func ensureUsernameLength(v string) error {
@@ -33,5 +31,5 @@ func ensureUsernameLength(v string) error {
 
 // Value get the current value
 func (u Username) Value() string {
-	return u.value
+	return string(u)
 }

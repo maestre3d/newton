@@ -3,9 +3,7 @@ package valueobject
 import "errors"
 
 // DisplayName title or simplified name that will mostly appear in every UI interaction
-type DisplayName struct {
-	value string
-}
+type DisplayName string
 
 const (
 	displayNameMinLength = 2
@@ -16,11 +14,11 @@ const (
 var ErrDisplayNameOutOfRange = errors.New("display name is out of range [2, 256)")
 
 // NewDisplayName creates and validates a DisplayName
-func NewDisplayName(v string) (*DisplayName, error) {
+func NewDisplayName(v string) (DisplayName, error) {
 	if err := ensureDisplayNameLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &DisplayName{value: v}, nil
+	return DisplayName(v), nil
 }
 
 func ensureDisplayNameLength(v string) error {
@@ -32,5 +30,5 @@ func ensureDisplayNameLength(v string) error {
 
 // Value get the current value
 func (n DisplayName) Value() string {
-	return n.value
+	return string(n)
 }

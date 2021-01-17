@@ -6,9 +6,7 @@ import (
 )
 
 // Image an aggregate Image image, referenced as external resource with its url
-type Image struct {
-	value string
-}
+type Image string
 
 const (
 	ImageValidExtension0          = ".jpg"
@@ -31,15 +29,15 @@ var (
 )
 
 // NewImage creates and validates an Image
-func NewImage(v string) (*Image, error) {
+func NewImage(v string) (Image, error) {
 	if err := ensureValidURL(v, ErrImageInvalidURL); err != nil {
-		return nil, err
+		return "", err
 	} else if err := ensureURLLength(v, ErrImageOutOfRange); err != nil {
-		return nil, err
+		return "", err
 	} else if err := ensureImageValidExtension(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &Image{value: v}, nil
+	return Image(v), nil
 }
 
 func ensureImageValidExtension(v string) error {
@@ -55,6 +53,6 @@ func ensureImageValidExtension(v string) error {
 }
 
 // Value get the current value
-func (c Image) Value() string {
-	return c.value
+func (i Image) Value() string {
+	return string(i)
 }

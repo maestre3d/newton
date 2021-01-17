@@ -38,9 +38,9 @@ func TestNewDisplayName(t *testing.T) {
 
 func BenchmarkNewDisplayName(b *testing.B) {
 	b.Run("Bench New Display name", func(b *testing.B) {
-		var v *DisplayName
+		var v DisplayName
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

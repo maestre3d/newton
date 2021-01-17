@@ -47,9 +47,9 @@ func TestNewImage(t *testing.T) {
 
 func BenchmarkNewImage(b *testing.B) {
 	b.Run("Bench New Image", func(b *testing.B) {
-		var v *Image
+		var v Image
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

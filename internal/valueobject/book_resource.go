@@ -6,9 +6,7 @@ import (
 )
 
 // BookResource an aggregate.Book external resource URL, references a file in format pdf
-type BookResource struct {
-	value string
-}
+type BookResource string
 
 const (
 	bookResourceValidExtension          = "pdf"
@@ -25,15 +23,15 @@ var (
 )
 
 // NewBookResource creates and validates a BookResource
-func NewBookResource(v string) (*BookResource, error) {
+func NewBookResource(v string) (BookResource, error) {
 	if err := ensureValidURL(v, ErrBookResourceInvalidURL); err != nil {
-		return nil, err
+		return "", err
 	} else if err := ensureURLLength(v, ErrBookResourceOutOfRange); err != nil {
-		return nil, err
+		return "", err
 	} else if err := ensureBookResourceValidExtension(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &BookResource{value: v}, nil
+	return BookResource(v), nil
 }
 
 func ensureBookResourceValidExtension(v string) error {
@@ -46,5 +44,5 @@ func ensureBookResourceValidExtension(v string) error {
 
 // Value get the current value
 func (r BookResource) Value() string {
-	return r.value
+	return string(r)
 }

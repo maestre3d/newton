@@ -42,9 +42,9 @@ func TestNewBookID(t *testing.T) {
 func BenchmarkNewBookID(b *testing.B) {
 	id := gonanoid.Must(16)
 	b.Run("Bench New book id", func(b *testing.B) {
-		var v *BookID
+		var v BookID
 		defer func() {
-			if v != nil {
+			if v != "" {
 			}
 		}()
 		b.ReportAllocs()

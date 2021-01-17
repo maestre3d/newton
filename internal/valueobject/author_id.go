@@ -4,9 +4,7 @@ import "errors"
 
 // AuthorID aggregate.Author unique identifier
 //	Prefer nano ids over UUIDs for performance purposes
-type AuthorID struct {
-	value string
-}
+type AuthorID string
 
 const (
 	authorIDMinLength = 16
@@ -17,11 +15,11 @@ const (
 var ErrAuthorIDOutOfRange = errors.New("author id is out of range [16, 128)")
 
 // NewAuthorID creates and validates an AuthorID
-func NewAuthorID(v string) (*AuthorID, error) {
+func NewAuthorID(v string) (AuthorID, error) {
 	if err := ensureAuthorIDLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &AuthorID{value: v}, nil
+	return AuthorID(v), nil
 }
 
 func ensureAuthorIDLength(v string) error {
@@ -34,5 +32,5 @@ func ensureAuthorIDLength(v string) error {
 
 // Value get the current value
 func (i AuthorID) Value() string {
-	return i.value
+	return string(i)
 }

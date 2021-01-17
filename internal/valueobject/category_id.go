@@ -4,9 +4,7 @@ import "errors"
 
 // CategoryID aggregate.Book unique identifier
 //	Prefer nano ids over UUIDs for performance purposes
-type CategoryID struct {
-	value string
-}
+type CategoryID string
 
 const (
 	categoryIDMinLength = 16
@@ -17,11 +15,11 @@ const (
 var ErrCategoryIDOutOfRange = errors.New("category id is out of range [16, 128)")
 
 // NewCategoryID creates and validates a CategoryID
-func NewCategoryID(v string) (*CategoryID, error) {
+func NewCategoryID(v string) (CategoryID, error) {
 	if err := ensureCategoryIDLength(v); err != nil {
-		return nil, err
+		return "", err
 	}
-	return &CategoryID{value: v}, nil
+	return CategoryID(v), nil
 }
 
 func ensureCategoryIDLength(v string) error {
@@ -34,5 +32,5 @@ func ensureCategoryIDLength(v string) error {
 
 // Value get the current value
 func (i CategoryID) Value() string {
-	return i.value
+	return string(i)
 }
