@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/maestre3d/newton/internal/valueobject"
-	gonanoid "github.com/matoous/go-nanoid"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +16,7 @@ var authorStubDTO = struct {
 }{}
 
 func init() {
-	authorStubDTO.ID, _ = valueobject.NewAuthorID(gonanoid.MustID(16))
+	authorStubDTO.ID, _ = valueobject.NewAuthorID(gonanoid.Must(16))
 	authorStubDTO.Image, _ = valueobject.NewImage("https://foo.com/picture.jpg")
 	authorStubDTO.CreateBy, _ = valueobject.NewUsername("aruiz")
 	authorStubDTO.Name, _ = valueobject.NewDisplayName("Ludwig Boltzmann")
