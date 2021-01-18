@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
+
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/maestre3d/newton/internal/application"
 	"github.com/maestre3d/newton/internal/event"
@@ -13,7 +15,6 @@ import (
 	"github.com/maestre3d/newton/pkg/controller"
 	"github.com/maestre3d/newton/pkg/httputil"
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 )
 
 var infraModuleFx = fx.Options(
@@ -25,8 +26,9 @@ var infraModuleFx = fx.Options(
 		infrastructure.NewAWSDynamoDB,
 		infrastructure.NewConfiguration,
 		infrastructure.NewZapLogger,
-		func(logger *zap.Logger) event.Bus {
-			return eventbus.NewLocal(logger)
+		infrastructure.NewAWSEventBridge,
+		func(cfg infrastructure.Configuration, client *eventbridge.Client) event.Bus {
+			return eventbus.NewEventBridge(cfg, client)
 		},
 	),
 )

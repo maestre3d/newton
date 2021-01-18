@@ -30,6 +30,8 @@ github.com/aws/aws-sdk-go-v2/feature/ec2/imds v0.1.0 h1:zwhJDxNht/+a0QGy3RCveUFf
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v0.1.0/go.mod h1:d3o/QBgbYw2OYmbv/EGYs0zFH47qsCKCTDbaOgdQGH8=
 github.com/aws/aws-sdk-go-v2/service/dynamodb v0.31.0 h1:sqdT+stp7NlYs/cOtLMSMXj0WrGXSj4gWmIiPFrpNX8=
 github.com/aws/aws-sdk-go-v2/service/dynamodb v0.31.0/go.mod h1:3gJdaC23NGEM57Zm9L5CZzKGOfuvoclmAZu8ZFLNQKI=
+github.com/aws/aws-sdk-go-v2/service/eventbridge v0.31.0 h1:zW1gV7wWwn/lgxao6McqvutujeBlE82ZU32eI0Oc9+0=
+github.com/aws/aws-sdk-go-v2/service/eventbridge v0.31.0/go.mod h1:nA+6z3TLK0xlZSng/NUkIbj8GjimnWF4qf+MG95oaLE=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v0.4.0 h1:osjGuGbk/aVW8u2yhOijPhxLU1ardwPDsga5HHyQMbw=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v0.4.0/go.mod h1:Pjv1Z+nRaluwWCMuB6OQeqGRyiGk2WTrKG8RHs5wZug=
 github.com/aws/aws-sdk-go-v2/service/sts v0.31.0 h1:iJwlIyswoW4VM8RUmhC3397jdGa6QhMUtUf5daX+/a0=
@@ -98,11 +100,14 @@ github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0/go.mod h1:8NvIoxWQoOIhqOTXgf
 github.com/grpc-ecosystem/grpc-gateway v1.9.0/go.mod h1:vNeuVxBJEsws4ogUvrchl83t/GYV9WGTSLVdBhOQFDY=
 github.com/hashicorp/consul/api v1.1.0/go.mod h1:VmuI/Lkw1nC05EYQWNKwWGbkg+FbDBtguAZLlVdkD9Q=
 github.com/hashicorp/consul/sdk v0.1.1/go.mod h1:VKf9jXwCTEY1QZP2MOLRhb5i/I/ssyNV1vwHyQBF0x8=
+github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-cleanhttp v0.5.1/go.mod h1:JpRdi6/HCYpAwUzNwuwqhbovhLtngrth3wmdIIUrZ80=
 github.com/hashicorp/go-immutable-radix v1.0.0/go.mod h1:0y9vanUI8NX6FsYoO3zeMjhV/C5i9g4Q3DwcSNZ4P60=
 github.com/hashicorp/go-msgpack v0.5.3/go.mod h1:ahLV/dePpqEmjfWmKiqvPkv/twdG7iPBM1vqhUKIvfM=
 github.com/hashicorp/go-multierror v1.0.0/go.mod h1:dHtQlpGsu+cZNNAkkCN/P3hoUDHhCYQXV3UM06sGGrk=
+github.com/hashicorp/go-multierror v1.1.0 h1:B9UzwGQJehnUY1yNrnwREHc3fGbC2xefo8g4TbElacI=
+github.com/hashicorp/go-multierror v1.1.0/go.mod h1:spPvp8C1qA32ftKqdAHm4hHTbPw+vmowP0z+KUhOZdA=
 github.com/hashicorp/go-rootcerts v1.0.0/go.mod h1:K6zTfqpRlCUIjkwsN4Z+hiSfzSTQa6eBIzfwKfwNnHU=
 github.com/hashicorp/go-sockaddr v1.0.0/go.mod h1:7Xibr9yA9JjQq1JpNB2Vw7kxv8xerXegt+ozgdvDeDU=
 github.com/hashicorp/go-syslog v1.0.0/go.mod h1:qPfqrKkXGihmCqbJM2mZgkZGvKG1dFdvsLplgctolz4=

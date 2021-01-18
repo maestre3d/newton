@@ -51,7 +51,7 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 				DisplayName: name.Value(),
 				CreateBy:    createBy.Value(),
 				Image:       image.Value(),
-				CreateTime:  currentTime.String(),
+				CreateTime:  currentTime.Format(time.RFC3339),
 			},
 		},
 	}
@@ -70,7 +70,7 @@ func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Usern
 		DisplayName: a.DisplayName.Value(),
 		CreateBy:    a.CreateBy.Value(),
 		Image:       a.Image.Value(),
-		UpdateTime:  currentTime.String(),
+		UpdateTime:  currentTime.Format(time.RFC3339),
 	})
 }
 
@@ -82,14 +82,16 @@ func (a *Author) ChangeState(s bool) {
 	if s {
 		a.Events = append(a.Events, event.AuthorRestored{
 			AuthorID:    a.ID.Value(),
-			RestoreTime: currentTime.String(),
+			DisplayName: a.DisplayName.Value(),
+			RestoreTime: currentTime.Format(time.RFC3339),
 		})
 		return
 	}
 
 	a.Events = append(a.Events, event.AuthorDeactivated{
-		AuthorID:   a.ID.Value(),
-		DeleteTime: currentTime.String(),
+		AuthorID:    a.ID.Value(),
+		DisplayName: a.DisplayName.Value(),
+		DeleteTime:  currentTime.Format(time.RFC3339),
 	})
 }
 
@@ -97,8 +99,9 @@ func (a *Author) ChangeState(s bool) {
 func (a *Author) Remove() {
 	a.Metadata.MarkAsRemoval = true
 	a.Events = append(a.Events, event.AuthorRemoved{
-		AuthorID:   a.ID.Value(),
-		DeleteTime: time.Now().UTC().String(),
+		AuthorID:    a.ID.Value(),
+		DisplayName: a.DisplayName.Value(),
+		DeleteTime:  time.Now().UTC().Format(time.RFC3339),
 	})
 }
 

@@ -8,11 +8,13 @@ import (
 	"go.uber.org/zap"
 )
 
+// Local in memory event bus implementation
 type Local struct {
 	logger *zap.Logger
 	mu     sync.Mutex
 }
 
+// NewLocal allocates a new Local event bus implementation
 func NewLocal(logger *zap.Logger) *Local {
 	return &Local{
 		logger: logger,
@@ -20,6 +22,7 @@ func NewLocal(logger *zap.Logger) *Local {
 	}
 }
 
+// Publish propagates side-effects
 func (l *Local) Publish(ctx context.Context, events ...event.DomainEvent) error {
 	for _, ev := range events {
 		_ = l.publish(ctx, ev)
