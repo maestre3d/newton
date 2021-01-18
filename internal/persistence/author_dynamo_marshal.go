@@ -3,6 +3,8 @@ package persistence
 import (
 	"time"
 
+	"github.com/maestre3d/newton/internal/event"
+
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/maestre3d/newton/internal/aggregate"
 	"github.com/maestre3d/newton/internal/valueobject"
@@ -38,7 +40,7 @@ func unmarshalAuthorDynamo(a authorDynamo) (*aggregate.Author, error) {
 			UpdateTime: updateTime,
 			State:      a["active"].(*types.AttributeValueMemberBOOL).Value,
 		},
-		Events: nil,
+		Events: make([]event.DomainEvent, 0),
 	}, nil
 }
 
