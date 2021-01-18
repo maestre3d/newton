@@ -1,6 +1,9 @@
 package infrastructure
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/spf13/viper"
 )
 
@@ -9,6 +12,8 @@ import (
 type Configuration struct {
 	Stage       string
 	Version     string
+	HTTPAddress string
+	HTTPPort    int
 	AdminEmail  string
 	DynamoTable string
 }
@@ -16,8 +21,10 @@ type Configuration struct {
 func init() {
 	viper.SetDefault("newton.stage", DevStage)
 	viper.SetDefault("newton.version", "1.0.0")
+	viper.SetDefault("newton.http", "")
+	viper.SetDefault("newton.http.port", 8081)
 	viper.SetDefault("newton.admin_email", "luis.alonso.16@hotmail.com")
-	viper.SetDefault("newton.dynamo.table", "newton-books-dev")
+	viper.SetDefault("newton.dynamo.table", "newton-authors-dev")
 }
 
 const (
@@ -32,6 +39,8 @@ func NewConfiguration() Configuration {
 	return Configuration{
 		Stage:       viper.GetString("newton.stage"),
 		Version:     viper.GetString("newton.version"),
+		HTTPAddress: viper.GetString("newton.http"),
+		HTTPPort:    viper.GetInt("newton.http.port"),
 		AdminEmail:  viper.GetString("newton.admin_email"),
 		DynamoTable: viper.GetString("newton.dynamo.table"),
 	}
@@ -40,4 +49,24 @@ func NewConfiguration() Configuration {
 // IsProd returns if current config stage is in production stage
 func (c Configuration) IsProd() bool {
 	return c.Stage == ProdStage
+}
+
+// MajorVersion returns the current major version
+func (c Configuration) MajorVersion() int {
+	major, err := strconv.Atoi(strings.Split(c.Version, ".")[0])
+	if err != nil {
+		return 0
+	}
+
+	return major
+}
+
+// ReleaseStage returns the current release stage
+func (c Configuration) ReleaseStage() string {
+	stage := strings.Split(c.Version, "-")
+	if len(stage) < 2 {
+		return ""
+	}
+
+	return stage[1]
 }
