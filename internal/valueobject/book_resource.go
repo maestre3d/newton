@@ -1,8 +1,9 @@
 package valueobject
 
 import (
-	"errors"
 	"strings"
+
+	"github.com/maestre3d/newton/internal/domain"
 )
 
 // BookResource an aggregate.Book external resource URL, references a file in format pdf
@@ -15,11 +16,11 @@ const (
 
 var (
 	// ErrBookResourceInvalidURL the given book resource url is not compliant
-	ErrBookResourceInvalidURL = errors.New("book resource is an invalid url")
+	ErrBookResourceInvalidURL = domain.NewInvalidFormat("book_resource", "url")
 	// ErrBookResourceInvalidExtension the given book resource url has a forbidden file format
-	ErrBookResourceInvalidExtension = errors.New("book resource contains an invalid extension, expected [pdf]")
+	ErrBookResourceInvalidExtension = domain.NewInvalidFormat("book_resource", "pdf")
 	// ErrBookResourceOutOfRange the given book resource url char length is out of range
-	ErrBookResourceOutOfRange = errors.New("book resource is out of range [5, 2000)")
+	ErrBookResourceOutOfRange = domain.NewOutOfRange("book_resource", urlMinLength, urlMaxLength)
 )
 
 // NewBookResource creates and validates a BookResource

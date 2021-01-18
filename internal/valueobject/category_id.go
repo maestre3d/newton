@@ -1,6 +1,8 @@
 package valueobject
 
-import "errors"
+import (
+	"github.com/maestre3d/newton/internal/domain"
+)
 
 // CategoryID aggregate.Book unique identifier
 //	Prefer nano ids over UUIDs for performance purposes
@@ -12,7 +14,7 @@ const (
 )
 
 // ErrCategoryIDOutOfRange the given category id character length is out of range, use gonanoid.New(16)
-var ErrCategoryIDOutOfRange = errors.New("category id is out of range [16, 128)")
+var ErrCategoryIDOutOfRange = domain.NewOutOfRange("category_id", categoryIDMinLength, categoryIDMaxLength)
 
 // NewCategoryID creates and validates a CategoryID
 func NewCategoryID(v string) (CategoryID, error) {

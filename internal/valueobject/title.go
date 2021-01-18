@@ -1,6 +1,8 @@
 package valueobject
 
-import "errors"
+import (
+	"github.com/maestre3d/newton/internal/domain"
+)
 
 // Title Book display name
 type Title string
@@ -11,7 +13,7 @@ const (
 )
 
 // ErrTitleOutOfRange the given title character length is out of range
-var ErrTitleOutOfRange = errors.New("title is out of range [1, 256)")
+var ErrTitleOutOfRange = domain.NewOutOfRange("title", titleMinLength, titleMaxLength)
 
 // NewTitle creates and validates a Title
 func NewTitle(v string) (Title, error) {

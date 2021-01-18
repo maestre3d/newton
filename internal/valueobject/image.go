@@ -1,8 +1,9 @@
 package valueobject
 
 import (
-	"errors"
 	"strings"
+
+	"github.com/maestre3d/newton/internal/domain"
 )
 
 // Image an aggregate Image image, referenced as external resource with its url
@@ -21,11 +22,11 @@ const (
 
 var (
 	// ErrImageInvalidURL the given Image url is not compliant
-	ErrImageInvalidURL = errors.New("image is an invalid url")
+	ErrImageInvalidURL = domain.NewInvalidFormat("image", "url")
 	// ErrImageInvalidExtension the given Image url has a forbidden file format
-	ErrImageInvalidExtension = errors.New("image contains an invalid extension, expected [jpg, jpeg, png, webp]")
+	ErrImageInvalidExtension = domain.NewInvalidFormat("image", "jpg", "jpeg", "png", "webp")
 	// ErrImageOutOfRange the given Image url char length is out of range
-	ErrImageOutOfRange = errors.New("image is out of range [5, 2000)")
+	ErrImageOutOfRange = domain.NewOutOfRange("image", urlMinLength, urlMaxLength)
 )
 
 // NewImage creates and validates an Image

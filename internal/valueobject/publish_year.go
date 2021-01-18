@@ -1,8 +1,9 @@
 package valueobject
 
 import (
-	"errors"
 	"time"
+
+	"github.com/maestre3d/newton/internal/domain"
 )
 
 // PublishYear concrete year an aggregate.Book was published
@@ -13,7 +14,7 @@ const publishYearMinValue = 0
 var (
 	publishYearMaxValue = time.Now().UTC().Year()
 	// ErrPublishYearOutOfRange the given publish year was out of range, max is current year
-	ErrPublishYearOutOfRange = errors.New("publish year is out of range [0, current year)")
+	ErrPublishYearOutOfRange = domain.NewOutOfRange("publish_year", publishYearMinValue, publishYearMaxValue)
 )
 
 // NewPublishYear creates and validates a PublishYear

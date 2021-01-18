@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/maestre3d/newton/internal/domain"
 	"github.com/maestre3d/newton/internal/event"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
@@ -16,17 +17,19 @@ type Author struct {
 	Image       valueobject.Image
 
 	Metadata valueobject.Metadata
-	events   []event.DomainEvent
+	Events   []event.DomainEvent
 }
 
 var (
 	// ErrAuthorNotFound the given Author was not found
-	ErrAuthorNotFound = errors.New("author not found")
+	ErrAuthorNotFound = domain.NewNotFound("author")
 	// ErrAuthorAlreadyExists the given Author already exists
-	ErrAuthorAlreadyExists = errors.New("author already exists")
+	ErrAuthorAlreadyExists = domain.NewAlreadyExists("author")
+	// ErrAuthorCannotParse the current Author could not be parsed successfully
+	ErrAuthorCannotParse = errors.New("author can not be parsed")
 )
 
-// NewAuthor creates and pushes events into an aggregate.Author
+// NewAuthor creates and pushes Events into an aggregate.Author
 func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy valueobject.Username,
 	image valueobject.Image) *Author {
 	currentTime := time.Now().UTC()
@@ -42,7 +45,7 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 			MarkAsMutation: false,
 			MarkAsRemoval:  false,
 		},
-		events: []event.DomainEvent{
+		Events: []event.DomainEvent{
 			event.AuthorCreated{
 				AuthorID:    id.Value(),
 				DisplayName: name.Value(),
@@ -62,7 +65,7 @@ func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Usern
 	a.Image = image
 	a.Metadata.UpdateTime = currentTime
 	a.Metadata.MarkAsMutation = true
-	a.events = append(a.events, event.AuthorUpdated{
+	a.Events = append(a.Events, event.AuthorUpdated{
 		AuthorID:    a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),
 		CreateBy:    a.CreateBy.Value(),
@@ -77,14 +80,14 @@ func (a *Author) ChangeState(s bool) {
 	a.Metadata.State = s
 	a.Metadata.UpdateTime = currentTime
 	if s {
-		a.events = append(a.events, event.AuthorRestored{
+		a.Events = append(a.Events, event.AuthorRestored{
 			AuthorID:    a.ID.Value(),
 			RestoreTime: currentTime.String(),
 		})
 		return
 	}
 
-	a.events = append(a.events, event.AuthorDeactivated{
+	a.Events = append(a.Events, event.AuthorDeactivated{
 		AuthorID:   a.ID.Value(),
 		DeleteTime: currentTime.String(),
 	})
@@ -93,15 +96,15 @@ func (a *Author) ChangeState(s bool) {
 // Remove mark aggregate as removed
 func (a *Author) Remove() {
 	a.Metadata.MarkAsRemoval = true
-	a.events = append(a.events, event.AuthorRemoved{
+	a.Events = append(a.Events, event.AuthorRemoved{
 		AuthorID:   a.ID.Value(),
 		DeleteTime: time.Now().UTC().String(),
 	})
 }
 
-// PullEvents retrieves and flushes all occurred events
+// PullEvents retrieves and flushes all occurred Events
 func (a *Author) PullEvents() []event.DomainEvent {
-	memo := a.events
-	a.events = []event.DomainEvent{}
+	memo := a.Events
+	a.Events = []event.DomainEvent{}
 	return memo
 }

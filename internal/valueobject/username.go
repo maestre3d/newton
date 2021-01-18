@@ -1,6 +1,8 @@
 package valueobject
 
-import "errors"
+import (
+	"github.com/maestre3d/newton/internal/domain"
+)
 
 // Username aggregate.User unique name identifier, it is immutable if used as single username
 //	Could be also used as preferred username.
@@ -13,7 +15,7 @@ const (
 )
 
 // ErrUsernameOutOfRange the given username char length is out of range
-var ErrUsernameOutOfRange = errors.New("username is out of range [1, 128)")
+var ErrUsernameOutOfRange = domain.NewOutOfRange("username", usernameMinLength, usernameMaxLength)
 
 func NewUsername(v string) (Username, error) {
 	if err := ensureUsernameLength(v); err != nil {

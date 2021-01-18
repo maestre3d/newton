@@ -1,6 +1,8 @@
 package valueobject
 
-import "errors"
+import (
+	"github.com/maestre3d/newton/internal/domain"
+)
 
 // AuthorID aggregate.Author unique identifier
 //	Prefer nano ids over UUIDs for performance purposes
@@ -12,7 +14,7 @@ const (
 )
 
 // ErrAuthorIDOutOfRange the given author id character length is out of range, use gonanoid.New(16)
-var ErrAuthorIDOutOfRange = errors.New("author id is out of range [16, 128)")
+var ErrAuthorIDOutOfRange = domain.NewOutOfRange("author_id", authorIDMinLength, authorIDMaxLength)
 
 // NewAuthorID creates and validates an AuthorID
 func NewAuthorID(v string) (AuthorID, error) {

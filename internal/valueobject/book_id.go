@@ -1,7 +1,7 @@
 package valueobject
 
 import (
-	"errors"
+	"github.com/maestre3d/newton/internal/domain"
 )
 
 // BookID aggregate.Book unique identifier
@@ -14,7 +14,7 @@ const (
 )
 
 // ErrBookIDOutOfRange the given book id character length is out of range, use gonanoid.New(16)
-var ErrBookIDOutOfRange = errors.New("book id is out of range [16, 128)")
+var ErrBookIDOutOfRange = domain.NewOutOfRange("book_id", bookIDMinLength, bookIDMaxLength)
 
 // NewBookID creates and validates a BookID
 func NewBookID(v string) (BookID, error) {

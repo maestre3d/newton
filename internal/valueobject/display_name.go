@@ -1,6 +1,8 @@
 package valueobject
 
-import "errors"
+import (
+	"github.com/maestre3d/newton/internal/domain"
+)
 
 // DisplayName title or simplified name that will mostly appear in every UI interaction
 type DisplayName string
@@ -11,7 +13,7 @@ const (
 )
 
 // ErrDisplayNameOutOfRange the given DisplayName char length was out of the specified range
-var ErrDisplayNameOutOfRange = errors.New("display name is out of range [2, 256)")
+var ErrDisplayNameOutOfRange = domain.NewOutOfRange("display_name", displayNameMinLength, displayNameMaxLength)
 
 // NewDisplayName creates and validates a DisplayName
 func NewDisplayName(v string) (DisplayName, error) {
