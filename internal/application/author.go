@@ -6,7 +6,6 @@ import (
 
 	"github.com/maestre3d/newton/internal/aggregate"
 	"github.com/maestre3d/newton/internal/event"
-	"github.com/maestre3d/newton/internal/query"
 	"github.com/maestre3d/newton/internal/repository"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
@@ -26,21 +25,7 @@ func NewAuthor(r repository.Author, b event.Bus) *Author {
 }
 
 // GetByID retrieves an aggregate.Author by its unique identifier
-func (a *Author) GetByID(ctx context.Context, id valueobject.AuthorID) (*query.AuthorResponse, error) {
-	if id.Value() == "" {
-		return nil, aggregate.ErrAuthorNotFound
-	}
-	author, err := a.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	} else if author == nil {
-		return nil, aggregate.ErrAuthorNotFound
-	}
-	return query.MarshalAuthorResponse(*author), nil
-}
-
-// getByID retrieves an aggregate.Author by its unique identifier
-func (a *Author) getByID(ctx context.Context, id valueobject.AuthorID) (*aggregate.Author, error) {
+func (a *Author) GetByID(ctx context.Context, id valueobject.AuthorID) (*aggregate.Author, error) {
 	if id.Value() == "" {
 		return nil, aggregate.ErrAuthorNotFound
 	}
@@ -68,7 +53,7 @@ func (a *Author) SearchAll(ctx context.Context, criteria repository.Criteria) ([
 // Create creates and persists an aggregate.Author
 func (a *Author) Create(ctx context.Context, id valueobject.AuthorID, name valueobject.DisplayName,
 	createBy valueobject.Username, image valueobject.Image) error {
-	if author, _ := a.getByID(ctx, id); author != nil {
+	if author, _ := a.GetByID(ctx, id); author != nil {
 		return aggregate.ErrAuthorAlreadyExists
 	}
 
@@ -88,7 +73,7 @@ func (a *Author) Create(ctx context.Context, id valueobject.AuthorID, name value
 // Modify mutates the given aggregate.Author state
 func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name valueobject.DisplayName,
 	createBy valueobject.Username, image valueobject.Image) error {
-	author, err := a.getByID(ctx, id)
+	author, err := a.GetByID(ctx, id)
 	if err != nil {
 		return err
 	} else if name.Value() == "" && createBy.Value() == "" && image.Value() == "" {
@@ -120,7 +105,7 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 
 // ChangeState restores or deactivates the given aggregate.Author
 func (a *Author) ChangeState(ctx context.Context, id valueobject.AuthorID, s bool) error {
-	author, err := a.getByID(ctx, id)
+	author, err := a.GetByID(ctx, id)
 	if err != nil {
 		return err
 	} else if author.Metadata.State == s {
@@ -143,7 +128,7 @@ func (a *Author) ChangeState(ctx context.Context, id valueobject.AuthorID, s boo
 
 // Remove permanently deletes the given aggregate.Author
 func (a *Author) Remove(ctx context.Context, id valueobject.AuthorID) error {
-	author, err := a.getByID(ctx, id)
+	author, err := a.GetByID(ctx, id)
 	if err != nil && errors.Is(err, aggregate.ErrAuthorNotFound) {
 		return nil
 	} else if err != nil {

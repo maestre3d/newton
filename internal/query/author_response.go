@@ -7,7 +7,7 @@ import (
 )
 
 // AuthorResponse aggregate.Author query response
-type AuthorResponse struct {
+type authorResponse struct {
 	AuthorID    string `json:"author_id"`
 	DisplayName string `json:"display_name"`
 	CreateBy    string `json:"create_by"`
@@ -15,13 +15,32 @@ type AuthorResponse struct {
 	LastUpdate  string `json:"last_update"`
 }
 
-// MarshalAuthorResponse parses the given aggregate.Author into an AuthorResponse
-func MarshalAuthorResponse(a aggregate.Author) *AuthorResponse {
-	return &AuthorResponse{
+// marshalAuthorResponse parses the given aggregate.Author into an AuthorResponse
+func marshalAuthorResponse(a aggregate.Author) *authorResponse {
+	return &authorResponse{
 		AuthorID:    a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),
 		CreateBy:    a.CreateBy.Value(),
 		Image:       a.Image.Value(),
 		LastUpdate:  a.Metadata.UpdateTime.Format(time.RFC3339),
 	}
+}
+
+type authorsResponse struct {
+	Items    []*authorResponse `json:"items"`
+	Count    int               `json:"count"`
+	NextPage string            `json:"next_page"`
+}
+
+// marshalAuthorsResponse parses the given aggregate.Author slice into an AuthorsResponse
+func marshalAuthorsResponse(as []*aggregate.Author, nextPage string) *authorsResponse {
+	res := &authorsResponse{
+		Items:    make([]*authorResponse, 0),
+		Count:    len(as),
+		NextPage: nextPage,
+	}
+	for _, a := range as {
+		res.Items = append(res.Items, marshalAuthorResponse(*a))
+	}
+	return res
 }
