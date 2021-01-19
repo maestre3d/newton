@@ -1,28 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import {Foo} from './Foo';
+import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
-import { Client as Styletron } from "styletron-engine-atomic";
+import { Provider as StyletronProvider, DebugEngine } from 'styletron-react';
+import { Client as Styletron } from 'styletron-engine-atomic';
 
 const debug =
   process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
 
 // 1. Create a client engine instance
 const engine = new Styletron();
-/*
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StyletronProvider value={engine} debug={debug} debugAfterHydration>
+      <App />
+    </StyletronProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-);*/
-ReactDOM.render(
-  <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-    <App />
-  </StyletronProvider>,
   document.getElementById('root')
 );
 
