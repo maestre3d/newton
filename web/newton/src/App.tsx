@@ -1,24 +1,14 @@
-import React from 'react';
-import './App.css';
-import {LightTheme, ThemeProvider} from 'baseui';
-import {Foo} from './Foo';
-import Home from './app/page/home/Home';
-import DefaultShell from './app/shared/component/default-shell/Default-Shell';
+import './App.css'
+import { BrowserRouter as Router } from 'react-router-dom'
+import DefaultShell from './app/shared/component/default-shell/Default-Shell'
 
+// App root component
 function App() {
   return (
-    <ThemeProvider theme={LightTheme}>
-      <div>
-        <DefaultShell />
-      </div>
-      <div>
-        <Foo />
-      </div>
-      <div>
-        <Home />
-      </div>
-    </ThemeProvider>
+    <Router>
+      <DefaultShell />
+    </Router>
   );
 }
 
-export default App;
+export default App
