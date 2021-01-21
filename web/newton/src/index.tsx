@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom'
 import './index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { LoadThemeDOM } from './internal/shared/infrastructure/theme'
+
+LoadThemeDOM()
 
 ReactDOM.render(
   <React.StrictMode>

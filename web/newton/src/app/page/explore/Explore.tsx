@@ -9,7 +9,7 @@ function Explore() {
                 <title>{`${APPLICATION_NAME} - Explore`}</title>
                 <link rel='canonical' href={`https://${APPLICATION_DOMAIN}/explore`} />
             </Helmet>
-            <div>Explore</div>
+            <div className='dark:text-gray-900'>Explore</div>
         </Fragment>
     )
 }

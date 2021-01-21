@@ -13,7 +13,7 @@ function Home() {
                 <title>{`${APPLICATION_NAME} - Home`}</title>
                 <link rel='canonical' href={`https://${APPLICATION_DOMAIN}/`} />
             </Helmet>
-            <div>
+            <div className='p-8'>
                 <Input
                     value={value}
                     onChange={event => setValue(event.currentTarget.value)}

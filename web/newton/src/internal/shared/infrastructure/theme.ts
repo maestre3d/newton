@@ -1,9 +1,28 @@
-import { strict } from 'assert'
 import React from 'react'
 
 export const THEME = {
     light: 'light',
     dark: 'dark'
+}
+
+function getCachedTheme(): string {
+    const theme = localStorage.theme
+    if (theme !== THEME.dark && theme !== THEME.light) {
+        return THEME.light
+    }
+    return theme
+}
+
+export function LoadThemeDOM() {
+    const htmlRef = document.querySelector('html')
+    if (htmlRef !== null) {
+        if (localStorage.theme === THEME.dark || (!('theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlRef.classList.add(THEME.dark)
+            return
+        }
+        htmlRef.classList.remove(THEME.dark)
+    }
 }
 
 export interface themeContextType {
@@ -12,8 +31,8 @@ export interface themeContextType {
 }
 
 const ThemeDefault: themeContextType = {
-    theme: THEME.light,
-    setCurrentTheme: () => {}
+    theme: getCachedTheme() || THEME.light,
+    setCurrentTheme: () => { }
 }
 
 export const ThemeContext = React.createContext<themeContextType>(ThemeDefault)
@@ -27,11 +46,13 @@ export function ToggleTheme(theme: string): string {
 }
 
 export const useTheme = (): themeContextType => {
-    const [theme, setTheme] = React.useState(THEME.light)
+    const [theme, setTheme] = React.useState(getCachedTheme())
     const setCurrentTheme = React.useCallback((currentTheme: string): void => {
         setTheme(currentTheme)
+        localStorage.theme = currentTheme
+        LoadThemeDOM()
     }, [])
-    
+
     return {
         theme,
         setCurrentTheme
