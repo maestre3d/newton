@@ -18,6 +18,7 @@ export function LoadThemeDOM() {
     if (htmlRef !== null) {
         if (localStorage.theme === THEME.dark || (!('theme' in localStorage) &&
             window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            localStorage.theme = THEME.dark
             htmlRef.classList.add(THEME.dark)
             return
         }
