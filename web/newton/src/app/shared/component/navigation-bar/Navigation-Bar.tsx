@@ -1,28 +1,36 @@
+import React from 'react'
+import { ThemeContext, ThemeLabelAlt, ToggleTheme } from '../../../../internal/shared/infrastructure/theme'
 import { AppNavBar, NavItemT, setItemActive } from 'baseui/app-nav-bar'
 import { Overflow, DeleteAlt } from 'baseui/icon'
 import { DefaultUser } from '../../../../internal/library/user/domain/user'
 import { NavLink, useLocation } from 'react-router-dom'
 import HorizontalLogo from '../horizontal-logo/Horizontal-Logo'
-import React from 'react'
+
+let setMainItems: React.Dispatch<React.SetStateAction<NavItemT[]>>
+
+function handleItems(item: NavItemT) {
+    setMainItems(prev => setItemActive(prev, item));
+}
 
 function NavigationBar() {
     const location = useLocation()
-    const [mainItems, setMainItems] = React.useState<NavItemT[]>([
+    const { theme, setCurrentTheme } = React.useContext(ThemeContext)
+    const [mainItems, setMainItemsLocal] = React.useState<NavItemT[]>([
         { label: 'Home', info: { path: '/' } },
         { label: 'Explore', info: { path: '/explore' } }
     ])
-    function handleMainItemSelect(item: NavItemT) {
-        setMainItems(prev => setItemActive(prev, item));
-    }
+    setMainItems = setMainItemsLocal
+
     return (
         <AppNavBar
             title={HorizontalLogo}
             mainItems={mainItems}
-            onMainItemSelect={handleMainItemSelect}
+            onMainItemSelect={handleItems}
             mapItemToNode={item => {
-                item.active = item.info !== undefined ? location.pathname === item.info.path : item.active
+                item.active = item.info !== undefined ? location.pathname === item.info.path : true
                 return (
-                    <NavLink activeClassName='font-bold' exact to={item.info !== undefined ? item.info.path : '/'}>
+                    <NavLink activeClassName='font-bold' exact to={item.info !== undefined && item.info.path !== undefined ?
+                        item.info.path : '/'}>
                         {item.label}
                     </NavLink>
                 )
@@ -31,9 +39,14 @@ function NavigationBar() {
             usernameSubtitle={DefaultUser.PreferredUsername}
             userItems={[
                 { icon: Overflow, label: 'Favorites' },
+                { icon: Overflow, label: ThemeLabelAlt(theme), info: { theme: true } },
                 { icon: DeleteAlt, label: 'Sign Out' }
             ]}
-        // onUserItemSelect={item => console.log(item)}
+            onUserItemSelect={item => {
+                if (item.info !== undefined && item.info.theme) {
+                    setCurrentTheme(ToggleTheme(theme))
+                }
+            }}
         />
     )
 }
