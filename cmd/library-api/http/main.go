@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
-
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
 	"github.com/maestre3d/newton/internal/application"
 	"github.com/maestre3d/newton/internal/event"
 	"github.com/maestre3d/newton/internal/eventbus"
