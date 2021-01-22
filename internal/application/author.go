@@ -3,6 +3,7 @@ package application
 import (
 	"context"
 	"errors"
+	"io"
 
 	"github.com/maestre3d/newton/internal/aggregate"
 	"github.com/maestre3d/newton/internal/event"
@@ -44,7 +45,7 @@ func (a *Author) SearchAll(ctx context.Context, criteria repository.Criteria) ([
 	authors, nextPage, err := a.repo.Search(ctx, criteria)
 	if err != nil {
 		return nil, "", err
-	} else if authors == nil || len(authors) == 0 {
+	} else if len(authors) == 0 {
 		return nil, "", aggregate.ErrAuthorNotFound
 	}
 	return authors, nextPage, nil
@@ -92,7 +93,7 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 	}
 	author.Update(author.DisplayName, author.CreateBy, author.Image)
 
-	if err := a.repo.Save(ctx, *author); err != nil {
+	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
 	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
@@ -114,7 +115,7 @@ func (a *Author) ChangeState(ctx context.Context, id valueobject.AuthorID, s boo
 
 	memo := author.Metadata.State
 	author.ChangeState(s)
-	if err := a.repo.Save(ctx, *author); err != nil {
+	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
 	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
@@ -137,7 +138,7 @@ func (a *Author) Remove(ctx context.Context, id valueobject.AuthorID) error {
 
 	memo := author
 	author.Remove()
-	if err := a.repo.Save(ctx, *author); err != nil {
+	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
 	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
@@ -145,5 +146,10 @@ func (a *Author) Remove(ctx context.Context, id valueobject.AuthorID) error {
 		}()
 		return err
 	}
+	return nil
+}
+
+// UploadPicture stores the given image into specific static buckets and CDNs
+func (a *Author) UploadPicture(ctx context.Context, file io.ReadCloser, size int64, name string) error {
 	return nil
 }
