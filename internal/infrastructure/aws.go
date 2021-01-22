@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 // NewAWSConfig allocates a new Amazon Web Services configuration
@@ -22,4 +23,10 @@ func NewAWSDynamoDB(cfg aws.Config) *dynamodb.Client {
 // NewAWSEventBridge allocates a new Amazon Web Services EventBridge client
 func NewAWSEventBridge(cfg aws.Config) *eventbridge.Client {
 	return eventbridge.NewFromConfig(cfg)
+}
+
+// NewAWSSimpleStorage allocates a new Amazon Web Services S3 (Simple Storage Service) client
+func NewAWSSimpleStorage(newtonCfg Configuration, cfg aws.Config) *s3.Client {
+	cfg.Region = newtonCfg.BucketRegion
+	return s3.NewFromConfig(cfg)
 }

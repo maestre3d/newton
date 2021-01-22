@@ -3,10 +3,11 @@ module github.com/maestre3d/newton
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go-v2 v0.31.0
-	github.com/aws/aws-sdk-go-v2/config v0.4.0
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v0.31.0
-	github.com/aws/aws-sdk-go-v2/service/eventbridge v0.31.0
+	github.com/aws/aws-sdk-go-v2 v1.0.0
+	github.com/aws/aws-sdk-go-v2/config v1.0.0
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.0.0
+	github.com/aws/aws-sdk-go-v2/service/eventbridge v1.0.0
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.0.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/go-multierror v1.1.0

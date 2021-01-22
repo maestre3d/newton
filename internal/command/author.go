@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"io"
 
 	"github.com/maestre3d/newton/internal/application"
 	"github.com/maestre3d/newton/internal/valueobject"
@@ -99,4 +100,21 @@ func DeleteAuthorHandle(app *application.Author, ctx context.Context, cmd Delete
 		return err
 	}
 	return app.Remove(ctx, id)
+}
+
+// UploadAuthorPicture requests an aggregate.Author image upload
+type UploadAuthorPicture struct {
+	ID       string
+	Filename string
+	Size     int64
+	Image    io.Reader
+}
+
+// UploadAuthorPictureHandle executes UploadAuthorPicture command
+func UploadAuthorPictureHandle(app *application.Author, ctx context.Context, cmd UploadAuthorPicture) error {
+	id, err := valueobject.NewAuthorID(cmd.ID)
+	if err != nil {
+		return err
+	}
+	return app.UploadPicture(ctx, id, valueobject.NewFile(cmd.Filename, cmd.Size, cmd.Image))
 }

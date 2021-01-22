@@ -3,27 +3,34 @@ package application
 import (
 	"context"
 	"errors"
-	"io"
 
 	"github.com/maestre3d/newton/internal/aggregate"
+	"github.com/maestre3d/newton/internal/domain"
 	"github.com/maestre3d/newton/internal/event"
 	"github.com/maestre3d/newton/internal/repository"
+	"github.com/maestre3d/newton/internal/service"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
 
 // Author performs all the aggregate.Author use cases atomically
 type Author struct {
-	repo repository.Author
-	bus  event.Bus
+	repo   repository.Author
+	bucket service.FileBucket
+	bus    event.Bus
 }
 
 // NewAuthor allocates a new Author use case performer
-func NewAuthor(r repository.Author, b event.Bus) *Author {
+func NewAuthor(r repository.Author, b event.Bus, bucket service.FileBucket) *Author {
 	return &Author{
-		repo: r,
-		bus:  b,
+		repo:   r,
+		bus:    b,
+		bucket: bucket,
 	}
 }
+
+var (
+	maxPictureSize = 2 * domain.MebiByte
+)
 
 // GetByID retrieves an aggregate.Author by its unique identifier
 func (a *Author) GetByID(ctx context.Context, id valueobject.AuthorID) (*aggregate.Author, error) {
@@ -150,6 +157,31 @@ func (a *Author) Remove(ctx context.Context, id valueobject.AuthorID) error {
 }
 
 // UploadPicture stores the given image into specific static buckets and CDNs
-func (a *Author) UploadPicture(ctx context.Context, file io.ReadCloser, size int64, name string) error {
+func (a *Author) UploadPicture(ctx context.Context, id valueobject.AuthorID, file *valueobject.File) error {
+	if file.Size > maxPictureSize {
+		return aggregate.ErrImageSizeOutOfRange // stop here to avoid useless data fetching
+	} else if file.Extension != "png" && file.Extension != "jpeg" && file.Extension != "jpg" && file.Extension != "webp" {
+		return valueobject.ErrImageInvalidExtension
+	}
+
+	author, err := a.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	key := "newton/authors/" + id.Value() + "." + file.Extension
+	fileUrl, err := a.bucket.Upload(ctx, key, file)
+	if err != nil {
+		return err
+	}
+
+	author.UploadPicture(fileUrl)
+	if err = a.bus.Publish(ctx, author.PullEvents()...); err != nil {
+		go func() {
+			_ = a.bucket.Delete(ctx, key)
+		}()
+		return err
+	}
+
 	return nil
 }

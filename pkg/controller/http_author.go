@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -34,6 +35,7 @@ func (h AuthorHTTP) Route(r *mux.Router) {
 	r.Path("/authors/{id}").Methods(http.MethodDelete).HandlerFunc(h.delete)
 	r.Path("/authors/{id}/state").Methods(http.MethodDelete, http.MethodPatch, http.MethodPatch).
 		HandlerFunc(h.changeState)
+	r.Path("/authors/{id}/image").Methods(http.MethodPatch, http.MethodPut).HandlerFunc(h.uploadPicture)
 }
 
 func (h AuthorHTTP) get(w http.ResponseWriter, r *http.Request) {
@@ -120,4 +122,36 @@ func (h AuthorHTTP) delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httputil.RespondJSON(w, http.StatusOK, nil)
+}
+
+func (h AuthorHTTP) uploadPicture(w http.ResponseWriter, r *http.Request) {
+	file, header, err := r.FormFile("image")
+	if err != nil {
+		httputil.RespondErrJSON(w, r, err)
+		return
+	}
+	defer func() {
+		if err = file.Close(); err != nil {
+			log.Print(err)
+			return
+		}
+	}()
+	err = command.UploadAuthorPictureHandle(h.app, r.Context(), command.UploadAuthorPicture{
+		ID:       mux.Vars(r)["id"],
+		Filename: header.Filename,
+		Size:     header.Size,
+		Image:    file,
+	})
+	if err != nil {
+		httputil.RespondErrJSON(w, r, err)
+		return
+	}
+
+	httputil.RespondJSON(w, http.StatusOK, struct {
+		Filename string `json:"filename"`
+		Size     int64  `json:"size"`
+	}{
+		Filename: mux.Vars(r)["id"],
+		Size:     header.Size,
+	})
 }

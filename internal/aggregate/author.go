@@ -27,6 +27,8 @@ var (
 	ErrAuthorAlreadyExists = domain.NewAlreadyExists("author")
 	// ErrAuthorCannotParse the current Author could not be parsed successfully
 	ErrAuthorCannotParse = errors.New("author can not be parsed")
+	// ErrImageSizeOutOfRange the given Author.Image was out of the accepted image file range (up to 8 Mebibytes)
+	ErrImageSizeOutOfRange = domain.NewOutOfRange("image size (Mb)", 0, 2)
 )
 
 // NewAuthor creates and pushes Events into an aggregate.Author
@@ -57,7 +59,7 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 	}
 }
 
-// Update perform a bulk modification
+// Update performs a bulk modification
 func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Username, image valueobject.Image) {
 	currentTime := time.Now().UTC()
 	a.DisplayName = name
@@ -95,13 +97,21 @@ func (a *Author) ChangeState(s bool) {
 	})
 }
 
-// Remove mark aggregate as removed
+// Remove marks aggregate as removed
 func (a *Author) Remove() {
 	a.Metadata.MarkAsRemoval = true
 	a.Events = append(a.Events, event.AuthorRemoved{
 		AuthorID:    a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),
 		DeleteTime:  time.Now().UTC().Format(time.RFC3339),
+	})
+}
+
+// UploadPicture stores and overrides (if required) the current Author image
+func (a *Author) UploadPicture(imageUrl string) {
+	a.Events = append(a.Events, event.AuthorImageUploaded{
+		AuthorID: a.ID.Value(),
+		Image:    imageUrl,
 	})
 }
 
