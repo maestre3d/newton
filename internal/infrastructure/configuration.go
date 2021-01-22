@@ -40,6 +40,7 @@ const (
 
 // NewConfiguration creates a Configuration with default configs or from sources
 func NewConfiguration() Configuration {
+	viper.AutomaticEnv()
 	return Configuration{
 		Application: viper.GetString("newton.application"),
 		Stage:       viper.GetString("newton.stage"),
