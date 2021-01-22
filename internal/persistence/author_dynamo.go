@@ -35,13 +35,10 @@ func NewAuthorDynamo(cfg infrastructure.Configuration, db *dynamodb.Client) *Aut
 func (d *AuthorDynamo) Save(ctx context.Context, author aggregate.Author) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	var exec func(context.Context, aggregate.Author) error
 	if author.Metadata.MarkAsRemoval {
-		exec = d.deleteItem
-	} else {
-		exec = d.putItem
+		return d.deleteItem(ctx, author)
 	}
-	return exec(ctx, author)
+	return d.putItem(ctx, author)
 }
 
 func (d *AuthorDynamo) putItem(ctx context.Context, author aggregate.Author) error {
