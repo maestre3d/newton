@@ -8,8 +8,8 @@ import (
 	"github.com/maestre3d/newton/internal/valueobject"
 )
 
-// UpdateAuthorOnAuthorImageUploaded projects the new Author's image url into main persistence store
-func UpdateAuthorOnAuthorImageUploaded(app *application.Author, ctx context.Context, ev event.AuthorImageUploaded) error {
+// UpdateAuthorOnImageUploaded projects the new Author's image url into main persistence store
+func UpdateAuthorOnImageUploaded(app *application.Author, ctx context.Context, ev event.AuthorImageUploaded) error {
 	id, err := valueobject.NewAuthorID(ev.AuthorID)
 	if err != nil {
 		return err
