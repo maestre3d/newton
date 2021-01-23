@@ -27,6 +27,7 @@ func NewAWSEventBridge(cfg aws.Config) *eventbridge.Client {
 
 // NewAWSSimpleStorage allocates a new Amazon Web Services S3 (Simple Storage Service) client
 func NewAWSSimpleStorage(newtonCfg Configuration, cfg aws.Config) *s3.Client {
-	cfg.Region = newtonCfg.BucketRegion
-	return s3.NewFromConfig(cfg)
+	return s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.Region = newtonCfg.BucketRegion
+	})
 }
