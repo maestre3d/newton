@@ -12,7 +12,7 @@ import (
 
 // NewAWSConfig allocates a new Amazon Web Services configuration
 func NewAWSConfig(ctx context.Context) (aws.Config, error) {
-	return config.LoadDefaultConfig(ctx, config.WithSharedConfigProfile("default"))
+	return config.LoadDefaultConfig(ctx)
 }
 
 // NewAWSDynamoDB allocates a new Amazon Web Services DynamoDB client
