@@ -1,15 +1,14 @@
 package service
 
 import (
-	"bytes"
 	"context"
-	"net/http"
-	"strings"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/maestre3d/newton/internal/domain"
 	"github.com/maestre3d/newton/internal/infrastructure"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
@@ -35,17 +34,16 @@ func (s *FileBucketS3) Upload(ctx context.Context, key string, file *valueobject
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	buffer := make([]byte, file.Size)
-	if _, err := file.File.Read(buffer); err != nil {
-		return "", err
-	}
-	_, err := s.c.PutObject(ctx, &s3.PutObjectInput{
+	uploader := manager.NewUploader(s.c, func(u *manager.Uploader) {
+		u.PartSize = 10 * domain.MebiByte
+	})
+	_, err := uploader.Upload(ctx, &s3.PutObjectInput{
 		Bucket:        aws.String(s.cfg.BucketName),
 		ACL:           types.ObjectCannedACLPrivate,
 		Key:           aws.String(key),
-		Body:          bytes.NewReader(buffer),
+		Body:          file.File,
 		StorageClass:  types.StorageClassIntelligentTiering,
-		ContentType:   aws.String(http.DetectContentType(buffer)),
+		ContentType:   aws.String(s.getMIMEType(file.Extension)),
 		ContentLength: file.Size,
 	})
 	if err != nil {
@@ -65,19 +63,23 @@ func (s *FileBucketS3) Delete(ctx context.Context, key string) error {
 	return err
 }
 
-func (s *FileBucketS3) getMIMEType(key string) string {
-	switch {
-	case strings.HasSuffix(key, ".jpg") || strings.HasSuffix(key, ".jpeg"):
-		return "Content-Type: image/jpeg"
-	case strings.HasSuffix(key, ".png"):
+// getMIMEType returns a valid MIME Type from the given extension (must be lowercase)
+//	For further reference, take a read of the article https://www.iana.org/assignments/media-types/media-types.xhtml#image
+func (s *FileBucketS3) getMIMEType(ext string) string {
+	switch ext {
+	case "jpg":
+		return "image/jpeg"
+	case "jpeg":
+		return "image/jpeg"
+	case "png":
 		return "image/png"
-	case strings.HasSuffix(key, ".svg"):
+	case "svg":
 		return "image/svg+xml"
-	case strings.HasSuffix(key, ".webp"):
+	case "webp":
 		return "image/webp"
-	case strings.HasSuffix(key, ".pdf"):
+	case "pdf":
 		return "application/pdf"
 	default:
-		return ""
+		return "application/octet-stream"
 	}
 }

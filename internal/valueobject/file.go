@@ -24,7 +24,7 @@ func NewFile(filename string, size int64, file io.Reader) *File {
 	}
 }
 
-// FileNameExtension returns the file name and extension from a raw file name
+// getFileNameExtension returns the file name and extension from a raw file name
 //	Note: Merged both name and extension to avoid multiple string splitting
 //
 //	e.g "foo.png -> {"foo", "png"}
