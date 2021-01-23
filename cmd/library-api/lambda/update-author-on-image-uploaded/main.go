@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/hashicorp/go-multierror"
 	"github.com/maestre3d/newton/internal/application"
 	"github.com/maestre3d/newton/internal/event"
 	"github.com/maestre3d/newton/internal/infrastructure"
@@ -23,23 +24,28 @@ var (
 	logger    *zap.Logger
 )
 
-func handler(ctx context.Context, ev events.SQSEvent) {
+func handler(ctx context.Context, ev events.SQSEvent) error {
+	errs := new(multierror.Error)
 	for _, message := range ev.Records {
 		entity := events.SNSEntity{}
 		if err := infrastructure.UnmarshalSQSToSNS(message.Body, &entity); err != nil {
-			panic(err)
+			errs = multierror.Append(errs, err)
+			continue
 		}
 
 		domainEv := event.AuthorImageUploaded{}
 		if err := infrastructure.UnmarshalSNSToEvent(entity.Message, &domainEv); err != nil {
-			panic(err)
+			errs = multierror.Append(errs, err)
+			continue
 		}
 		infrastructure.LogSQSMessage(logger, message)
 		logger.Info("marshal domain event", zap.Any("event", domainEv))
+
 		if err := subscriber.UpdateAuthorOnImageUploaded(authorApp, ctx, domainEv); err != nil {
-			panic(err)
+			errs = multierror.Append(errs, err)
 		}
 	}
+	return errs.ErrorOrNil()
 }
 
 func main() {
