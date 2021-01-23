@@ -89,13 +89,13 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 	}
 
 	memo := author
-	if name.Value() != "" {
+	if name.Value() != "" && name != author.DisplayName {
 		author.DisplayName = name
 	}
-	if createBy.Value() != "" {
+	if createBy.Value() != "" && createBy != author.CreateBy {
 		author.CreateBy = createBy
 	}
-	if image.Value() != "" {
+	if image.Value() != "" && image != author.Image {
 		author.Image = image
 	}
 	author.Update(author.DisplayName, author.CreateBy, author.Image)
