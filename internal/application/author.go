@@ -6,7 +6,7 @@ import (
 
 	"github.com/maestre3d/newton/internal/aggregate"
 	"github.com/maestre3d/newton/internal/domain"
-	"github.com/maestre3d/newton/internal/event"
+	"github.com/maestre3d/newton/internal/eventbus"
 	"github.com/maestre3d/newton/internal/repository"
 	"github.com/maestre3d/newton/internal/service"
 	"github.com/maestre3d/newton/internal/valueobject"
@@ -16,11 +16,11 @@ import (
 type Author struct {
 	repo   repository.Author
 	bucket service.FileBucket
-	bus    event.Bus
+	bus    eventbus.Bus
 }
 
 // NewAuthor allocates a new Author use case performer
-func NewAuthor(r repository.Author, b event.Bus, bucket service.FileBucket) *Author {
+func NewAuthor(r repository.Author, b eventbus.Bus, bucket service.FileBucket) *Author {
 	return &Author{
 		repo:   r,
 		bus:    b,
