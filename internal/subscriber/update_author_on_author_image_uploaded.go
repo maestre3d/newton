@@ -22,6 +22,10 @@ func (u UpdateAuthorOnImageUploaded) SubscribedTo() event.DomainEvent {
 	return &event.AuthorImageUploaded{}
 }
 
+func (u UpdateAuthorOnImageUploaded) Action() string {
+	return "UPDATE_AUTHOR"
+}
+
 func (u UpdateAuthorOnImageUploaded) On(ctx context.Context, arg event.DomainEvent) error {
 	ev := arg.(*event.AuthorImageUploaded)
 	id, err := valueobject.NewAuthorID(ev.AuthorID)

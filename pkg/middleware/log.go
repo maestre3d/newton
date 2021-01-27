@@ -8,7 +8,7 @@ import (
 
 // LogDomainEvent logs the given domain event
 func LogDomainEvent(logger *zap.Logger, ev event.DomainEvent) {
-	logger.Info("received domain event", zap.Any("domain_event", ev))
+	logger.Info("received domain event", zap.String("event_id", ev.ID()), zap.Any("domain_event", ev))
 }
 
 // LogSQSMessage logs the given Amazon Web Services Simple Queue Service (SQS) message
