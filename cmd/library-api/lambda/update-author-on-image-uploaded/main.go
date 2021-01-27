@@ -19,12 +19,12 @@ func main() {
 		fx.NopLogger,
 		module.AWS,
 		fx.Provide(
-			func(cfg infrastructure.Configuration, db *dynamodb.Client) repository.Author {
-				return persistence.NewAuthorDynamo(cfg, db)
+			func(cfg infrastructure.Configuration, db *dynamodb.Client, logger *zap.Logger) repository.Author {
+				return repository.NewAuthor(persistence.NewAuthorDynamo(cfg, db), logger)
 			},
 			application.NewAuthor,
-			func(app *application.Author, l *zap.Logger) subscriber.Subscriber {
-				return subscriber.NewSubscriber(subscriber.NewUpdateAuthorOnImageUploaded(app), l)
+			func(app *application.Author, logger *zap.Logger) subscriber.Subscriber {
+				return subscriber.NewSubscriber(subscriber.NewUpdateAuthorOnImageUploaded(app), logger)
 			},
 			controller.NewEventAWS,
 		),

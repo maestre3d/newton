@@ -10,6 +10,7 @@ import (
 	"github.com/maestre3d/newton/pkg/controller"
 	"github.com/maestre3d/newton/pkg/httputil"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -17,8 +18,8 @@ func main() {
 		fx.NopLogger,
 		module.AWS,
 		fx.Provide(
-			func(cfg infrastructure.Configuration, db *dynamodb.Client) repository.Author {
-				return persistence.NewAuthorDynamo(cfg, db)
+			func(cfg infrastructure.Configuration, db *dynamodb.Client, logger *zap.Logger) repository.Author {
+				return repository.NewAuthor(persistence.NewAuthorDynamo(cfg, db), logger)
 			},
 			application.NewAuthor,
 			controller.NewAuthorHTTP,
