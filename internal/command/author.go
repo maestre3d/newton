@@ -54,13 +54,19 @@ func UpdateAuthorHandle(app *application.Author, ctx context.Context, cmd Update
 	if err != nil {
 		return err
 	}
-	name, err := valueobject.NewDisplayName(cmd.DisplayName)
-	if err != nil {
-		return err
+	var name valueobject.DisplayName
+	if cmd.DisplayName != "" {
+		name, err = valueobject.NewDisplayName(cmd.DisplayName)
+		if err != nil {
+			return err
+		}
 	}
-	createBy, err := valueobject.NewUsername(cmd.CreateBy)
-	if err != nil {
-		return err
+	var createBy valueobject.Username
+	if cmd.CreateBy != "" {
+		createBy, err = valueobject.NewUsername(cmd.CreateBy)
+		if err != nil {
+			return err
+		}
 	}
 	var image valueobject.Image
 	if cmd.Image != "" {
