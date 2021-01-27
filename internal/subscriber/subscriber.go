@@ -11,6 +11,7 @@ import (
 type Subscriber interface {
 	// SubscribedTo returns the event.DomainEvent this current Subscriber is subscribed to
 	SubscribedTo() event.DomainEvent
+	// Action returns the Subscriber task or process that will be done
 	Action() string
 	// On executes the required tasks based on the subscribed event.DomainEvent
 	On(context.Context, event.DomainEvent) error
@@ -20,7 +21,7 @@ type Subscriber interface {
 // logging, tracing and monitoring
 func NewSubscriber(root Subscriber, l *zap.Logger) Subscriber {
 	return logger{
-		logger: l,
-		next:   root,
+		log:  l,
+		next: root,
 	}
 }
