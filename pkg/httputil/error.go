@@ -47,7 +47,7 @@ func RespondErrJSON(w http.ResponseWriter, r *http.Request, err error) {
 	code := GetErrStatus(err)
 	title := err.Error()
 	if code == http.StatusInternalServerError {
-		title = "something happened" // hide internal errors to clients, they are still logged out
+		title = "something happened" // hide internal errors to clients, they are still logged out through stdout
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
