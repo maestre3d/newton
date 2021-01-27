@@ -9,8 +9,8 @@ import (
 
 // logger wrapper struct, logs Subscriber executions
 type logger struct {
-	logger *zap.Logger
-	next   Subscriber
+	log  *zap.Logger
+	next Subscriber
 }
 
 func (l logger) SubscribedTo() event.DomainEvent {
@@ -29,10 +29,10 @@ func (l logger) On(ctx context.Context, args event.DomainEvent) (err error) {
 		}
 		if err != nil {
 			fields = append(fields, zap.Error(err))
-			l.logger.Error("failed to process event", fields...)
+			l.log.Error("failed to process event", fields...)
 			return
 		}
-		l.logger.Info("processed event successfully", fields...)
+		l.log.Info("processed event successfully", fields...)
 	}()
 
 	err = l.next.On(ctx, args)
