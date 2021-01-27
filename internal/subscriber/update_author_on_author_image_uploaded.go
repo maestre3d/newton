@@ -9,7 +9,21 @@ import (
 )
 
 // UpdateAuthorOnImageUploaded projects the new Author's image url into main persistence store
-func UpdateAuthorOnImageUploaded(app *application.Author, ctx context.Context, ev event.AuthorImageUploaded) error {
+type UpdateAuthorOnImageUploaded struct {
+	app *application.Author
+}
+
+// NewUpdateAuthorOnImageUploaded allocates a new UpdateAuthorOnImageUploaded subscriber
+func NewUpdateAuthorOnImageUploaded(app *application.Author) *UpdateAuthorOnImageUploaded {
+	return &UpdateAuthorOnImageUploaded{app: app}
+}
+
+func (u UpdateAuthorOnImageUploaded) SubscribedTo() event.DomainEvent {
+	return &event.AuthorImageUploaded{}
+}
+
+func (u UpdateAuthorOnImageUploaded) On(ctx context.Context, arg event.DomainEvent) error {
+	ev := arg.(*event.AuthorImageUploaded)
 	id, err := valueobject.NewAuthorID(ev.AuthorID)
 	if err != nil {
 		return err
@@ -18,5 +32,5 @@ func UpdateAuthorOnImageUploaded(app *application.Author, ctx context.Context, e
 	if err != nil {
 		return err
 	}
-	return app.Modify(ctx, id, "", "", image)
+	return u.app.Modify(ctx, id, "", "", image)
 }

@@ -60,8 +60,7 @@ func (b *EventBridge) marshalAWSEventBulk(events []event.DomainEvent) ([]types.P
 			EventBusName: aws.String(b.cfg.AWSEventBus),
 			Source:       aws.String(b.cfg.Application),
 			Time:         aws.Time(time.Now().UTC()),
-		},
-		)
+		})
 	}
 	return entries, nil
 }
