@@ -44,7 +44,7 @@ func (b *EventBridge) Publish(ctx context.Context, events ...event.DomainEvent) 
 	if err != nil {
 		return err
 	}
-	return b.error(o)
+	return b.processError(o)
 }
 
 func (b *EventBridge) marshalAWSEventBulk(events []event.DomainEvent) ([]types.PutEventsRequestEntry, error) {
@@ -66,7 +66,7 @@ func (b *EventBridge) marshalAWSEventBulk(events []event.DomainEvent) ([]types.P
 	return entries, nil
 }
 
-func (b *EventBridge) error(o *eventbridge.PutEventsOutput) error {
+func (b *EventBridge) processError(o *eventbridge.PutEventsOutput) error {
 	errs := new(multierror.Error)
 	for _, i := range o.Entries {
 		if i.ErrorMessage != nil && *i.ErrorMessage != "" {
