@@ -14,6 +14,7 @@ import (
 
 func main() {
 	app := fx.New(
+		fx.NopLogger,
 		module.AWS,
 		fx.Provide(
 			func(cfg infrastructure.Configuration, db *dynamodb.Client) repository.Author {
