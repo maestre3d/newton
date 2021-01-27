@@ -68,7 +68,7 @@ func (a *Author) Create(ctx context.Context, id valueobject.AuthorID, name value
 	author := aggregate.NewAuthor(id, name, createBy, image)
 	if err := a.repo.Save(ctx, *author); err != nil {
 		return err
-	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
+	} else if err = a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
 			author.Metadata.MarkAsRemoval = true
 			_ = a.repo.Save(ctx, *author)
@@ -84,7 +84,11 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 	author, err := a.GetByID(ctx, id)
 	if err != nil {
 		return err
-	} else if name.Value() == "" && createBy.Value() == "" && image.Value() == "" {
+	}
+	wasNotUpdated := (name.Value() == "" || name.Value() == author.DisplayName.Value()) &&
+		(createBy.Value() == "" || createBy.Value() == author.CreateBy.Value()) &&
+		(image.Value() == "" || image.Value() == author.Image.Value())
+	if wasNotUpdated {
 		return nil
 	}
 
@@ -98,11 +102,11 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 	if image.Value() != "" && image != author.Image {
 		author.Image = image
 	}
-	author.Update(author.DisplayName, author.CreateBy, author.Image)
 
+	author.Update(author.DisplayName, author.CreateBy, author.Image)
 	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
-	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
+	} else if err = a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
 			_ = a.repo.Save(ctx, *memo)
 		}()
@@ -147,7 +151,7 @@ func (a *Author) Remove(ctx context.Context, id valueobject.AuthorID) error {
 	author.Remove()
 	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
-	} else if err := a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
+	} else if err = a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
 		go func() { // rollback
 			_ = a.repo.Save(ctx, *memo)
 		}()

@@ -54,10 +54,7 @@ func (l loggerAuthor) Get(ctx context.Context, id valueobject.AuthorID) (author 
 				zap.Error(err))
 			return
 		}
-		l.log.Info("successfully fetched author from database",
-			zap.String("author_id", author.ID.Value()),
-			zap.String("display_name", author.DisplayName.Value()),
-		)
+		l.log.Info("successfully fetched author from database", zap.String("author_id", id.Value()))
 	}()
 
 	author, err = l.next.Get(ctx, id)

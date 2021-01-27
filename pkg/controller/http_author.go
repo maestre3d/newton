@@ -51,12 +51,8 @@ func (h AuthorHTTP) get(w http.ResponseWriter, r *http.Request) {
 
 func (h AuthorHTTP) create(w http.ResponseWriter, r *http.Request) {
 	id, err := gonanoid.New(16)
-	defer func() {
-		if err != nil {
-			httputil.RespondErrJSON(w, r, err)
-		}
-	}()
 	if err != nil {
+		httputil.RespondErrJSON(w, r, err)
 		return
 	}
 	err = command.CreateAuthorHandle(h.app, r.Context(), command.CreateAuthor{
@@ -66,6 +62,7 @@ func (h AuthorHTTP) create(w http.ResponseWriter, r *http.Request) {
 		Image:       r.PostFormValue("image"),
 	})
 	if err != nil {
+		httputil.RespondErrJSON(w, r, err)
 		return
 	}
 	httputil.RespondJSON(w, http.StatusCreated, id)
