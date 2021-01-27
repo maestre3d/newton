@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/maestre3d/newton/internal/aggregate"
-	"github.com/maestre3d/newton/internal/event"
+	"github.com/maestre3d/newton/internal/eventbus"
 	"github.com/maestre3d/newton/internal/repository"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
@@ -12,7 +12,7 @@ import (
 // Book performs all the aggregate.Author use cases atomically
 type Book struct {
 	repo repository.Book
-	bus  event.Bus
+	bus  eventbus.Bus
 }
 
 func (b Book) Create(ctx context.Context, id valueobject.BookID, title valueobject.Title, uploader valueobject.Username,
