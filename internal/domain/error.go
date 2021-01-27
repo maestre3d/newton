@@ -74,6 +74,7 @@ func (e Error) IsRequired() bool {
 func NewDomain(e, d string) Error {
 	return Error{
 		group:       domain,
+		entity:      e,
 		description: d,
 	}
 }
@@ -88,50 +89,70 @@ func NewInfrastructure(d string) Error {
 
 // NewNotFound creates an Error for Not Found use cases
 func NewNotFound(e string) Error {
+	entityDesc := ""
+	if e != "" {
+		entityDesc = e + " "
+	}
 	return Error{
 		group:       domain,
 		kind:        notFound,
 		entity:      e,
-		description: e + " not found",
+		description: entityDesc + "not found",
 	}
 }
 
 // NewAlreadyExists creates an Error for Already Exists use cases
 func NewAlreadyExists(e string) Error {
+	entityDesc := ""
+	if e != "" {
+		entityDesc = e + " "
+	}
 	return Error{
 		group:       domain,
 		kind:        alreadyExists,
 		entity:      e,
-		description: e + " already exists",
+		description: entityDesc + "already exists",
 	}
 }
 
 // NewOutOfRange creates an Error for Out of Range use cases
 func NewOutOfRange(e string, a, b int) Error {
+	entityDesc := ""
+	if e != "" {
+		entityDesc = e + " is "
+	}
 	return Error{
 		group:       domain,
 		kind:        outOfRange,
 		entity:      e,
-		description: e + " is out of range [" + strconv.Itoa(a) + ", " + strconv.Itoa(b) + ")",
+		description: entityDesc + "out of range [" + strconv.Itoa(a) + "," + strconv.Itoa(b) + ")",
 	}
 }
 
 // NewInvalidFormat creates an Error for Invalid Format use cases
 func NewInvalidFormat(e string, exp ...string) Error {
+	entityDesc := ""
+	if e != "" {
+		entityDesc = e + " contains an "
+	}
 	return Error{
 		group:       domain,
 		kind:        invalidFormat,
 		entity:      e,
-		description: e + " contains an invalid format, expected [" + strings.Join(exp, ", ") + "]",
+		description: entityDesc + "invalid format, expected [" + strings.Join(exp, ",") + "]",
 	}
 }
 
 // NewRequired creates an Error for Required use cases
 func NewRequired(e string) Error {
+	entityDesc := ""
+	if e != "" {
+		entityDesc = e + " is "
+	}
 	return Error{
 		group:       domain,
 		kind:        required,
 		entity:      e,
-		description: e + " already exists",
+		description: entityDesc + "required",
 	}
 }
