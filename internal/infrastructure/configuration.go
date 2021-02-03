@@ -30,7 +30,7 @@ func init() {
 	viper.SetDefault("newton.http", "")
 	viper.SetDefault("newton.http.port", 8081)
 	viper.SetDefault("newton.admin_email", "luis.alonso.16@hotmail.com")
-	viper.SetDefault("newton.dynamo.table", "newton-authors-dev")
+	viper.SetDefault("newton.dynamo.table", "newton-library-dev")
 	viper.SetDefault("newton.eventbridge.bus", "newton-dev")
 	viper.SetDefault("newton.bucket.name", "cdn.damascus-engineering.com")
 	viper.SetDefault("newton.bucket.region", "us-west-2")
@@ -65,6 +65,11 @@ func NewConfiguration() Configuration {
 // IsProd returns if current config stage is in production stage
 func (c Configuration) IsProd() bool {
 	return c.Stage == ProdStage
+}
+
+// IsDev returns if current config stage is in development stage
+func (c Configuration) IsDev() bool {
+	return c.Stage == DevStage
 }
 
 // MajorVersion returns the current major version
