@@ -2,7 +2,6 @@ package httputil
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/maestre3d/newton/internal/domain"
@@ -43,7 +42,6 @@ func GetErrStatus(err error) int {
 
 // RespondErrJSON responds to an HTTP request with the given error as JSON
 func RespondErrJSON(w http.ResponseWriter, r *http.Request, err error) {
-	log.Print(err.Error())
 	code := GetErrStatus(err)
 	title := err.Error()
 	if code == http.StatusInternalServerError {
