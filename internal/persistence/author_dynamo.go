@@ -74,11 +74,15 @@ func (d *AuthorDynamo) deleteItem(ctx context.Context, author aggregate.Author) 
 func (d *AuthorDynamo) Get(ctx context.Context, id valueobject.AuthorID) (*aggregate.Author, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
+
+	exp, _ := expression.NewBuilder().WithProjection(d.newProjectionExpression()).Build()
 	o, err := d.db.GetItem(ctx, &dynamodb.GetItemInput{
 		Key: marshalDynamoKeyWithSort(dynamoDefaultPartitionKey, dynamoDefaultSortKey,
 			authorAdjacencyPattern+id.Value()),
-		TableName:      aws.String(d.cfg.DynamoTable),
-		ConsistentRead: aws.Bool(false),
+		TableName:                aws.String(d.cfg.DynamoTable),
+		ExpressionAttributeNames: exp.Names(),
+		ProjectionExpression:     exp.Projection(),
+		ConsistentRead:           aws.Bool(false),
 	})
 	if err != nil {
 		return nil, err
@@ -92,6 +96,11 @@ func (d *AuthorDynamo) Get(ctx context.Context, id valueobject.AuthorID) (*aggre
 	return unmarshalAuthorDynamo(author)
 }
 
+func (d *AuthorDynamo) newProjectionExpression() expression.ProjectionBuilder {
+	return expression.NamesList(expression.Name("PK"), expression.Name("SK"), expression.Name("DisplayName"), expression.Name("CreateTime"),
+		expression.Name("UpdateTime"), expression.Name("Active"), expression.Name("CreateBy"), expression.Name("Image"))
+}
+
 // Search returns a list of the current aggregate filtering and ordering by the given criteria, returns the
 // next page token as second argument and returns nil if not found
 func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria) ([]*aggregate.Author, string,
@@ -99,13 +108,15 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	exp, _ := d.newSearchExpression().Build()
+	exp, _ := expression.NewBuilder().WithFilter(d.newSearchExpression()).
+		WithProjection(d.newProjectionExpression()).Build()
 	o, err := d.db.Scan(ctx, &dynamodb.ScanInput{
 		TableName:                 aws.String(d.cfg.DynamoTable),
 		Limit:                     aws.Int32(int32(criteria.Limit)),
 		ExpressionAttributeNames:  exp.Names(),
 		ExpressionAttributeValues: exp.Values(),
 		FilterExpression:          exp.Filter(),
+		ProjectionExpression:      exp.Projection(),
 		ExclusiveStartKey:         marshalDynamoKey(dynamoDefaultPartitionKey, criteria.NextPage),
 	})
 	if err != nil {
@@ -124,8 +135,8 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	return authors, unmarshalDynamoKey(dynamoDefaultPartitionKey, o.LastEvaluatedKey), nil
 }
 
-func (d *AuthorDynamo) newSearchExpression() expression.Builder {
+func (d *AuthorDynamo) newSearchExpression() expression.ConditionBuilder {
 	partitionExp := expression.Name(dynamoDefaultPartitionKey).BeginsWith(authorAdjacencyPattern)
 	sortExp := expression.Name(dynamoDefaultSortKey).BeginsWith(authorAdjacencyPattern)
-	return expression.NewBuilder().WithFilter(expression.And(partitionExp, sortExp))
+	return expression.And(partitionExp, sortExp)
 }
