@@ -117,7 +117,7 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 		ExpressionAttributeValues: exp.Values(),
 		FilterExpression:          exp.Filter(),
 		ProjectionExpression:      exp.Projection(),
-		ExclusiveStartKey:         marshalDynamoKey(dynamoDefaultPartitionKey, criteria.NextPage),
+		ExclusiveStartKey:         marshalDynamoKeyWithSort(dynamoDefaultPartitionKey, dynamoDefaultSortKey, criteria.NextPage),
 	})
 	if err != nil {
 		return nil, "", err
