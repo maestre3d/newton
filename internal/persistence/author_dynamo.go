@@ -85,7 +85,7 @@ func (d *AuthorDynamo) Get(ctx context.Context, id valueobject.AuthorID) (*aggre
 	} else if o.Item == nil {
 		return nil, nil
 	}
-	author := authorDynamo{}
+	author := authorDynamoSchema{}
 	if err = attributevalue.UnmarshalMap(o.Item, &author); err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	} else if len(o.Items) == 0 {
 		return nil, "", nil
 	}
-	authorsPrimitive := make([]authorDynamo, 0)
+	authorsPrimitive := make([]authorDynamoSchema, 0)
 	if err = attributevalue.UnmarshalListOfMaps(o.Items, &authorsPrimitive); err != nil {
 		return nil, "", err
 	}

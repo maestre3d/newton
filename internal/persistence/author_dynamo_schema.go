@@ -10,7 +10,7 @@ import (
 )
 
 // authorDynamo Amazon Web Services DynamoDB aggregate.Author specific schema
-type authorDynamo struct {
+type authorDynamoSchema struct {
 	PK          string
 	SK          string
 	DisplayName string
@@ -22,8 +22,8 @@ type authorDynamo struct {
 }
 
 // marshalAuthorDynamo parses the given aggregate.Author into an Amazon Web Services DynamoDB schema
-func marshalAuthorDynamo(a aggregate.Author) *authorDynamo {
-	return &authorDynamo{
+func marshalAuthorDynamo(a aggregate.Author) *authorDynamoSchema {
+	return &authorDynamoSchema{
 		PK:          authorAdjacencyPattern + a.ID.Value(),
 		SK:          authorAdjacencyPattern + a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),
@@ -36,7 +36,7 @@ func marshalAuthorDynamo(a aggregate.Author) *authorDynamo {
 }
 
 // unmarshalAuthorDynamo parses the given authorDynamo into an aggregate.Author
-func unmarshalAuthorDynamo(a authorDynamo) (*aggregate.Author, error) {
+func unmarshalAuthorDynamo(a authorDynamoSchema) (*aggregate.Author, error) {
 	createTime, _ := time.Parse(time.RFC3339, a.CreateTime)
 	updateTime, _ := time.Parse(time.RFC3339, a.UpdateTime)
 	return &aggregate.Author{
@@ -54,7 +54,7 @@ func unmarshalAuthorDynamo(a authorDynamo) (*aggregate.Author, error) {
 }
 
 // unmarshalAuthorDynamoBulk parses the given authorDynamo list into a list of aggregate.Author(s)
-func unmarshalAuthorDynamoBulk(as []authorDynamo) ([]*aggregate.Author, error) {
+func unmarshalAuthorDynamoBulk(as []authorDynamoSchema) ([]*aggregate.Author, error) {
 	authors := make([]*aggregate.Author, 0)
 	for _, aDb := range as {
 		a, err := unmarshalAuthorDynamo(aDb)
