@@ -16,7 +16,21 @@ func NewAWSConfig(ctx context.Context) (aws.Config, error) {
 }
 
 // NewAWSDynamoDB allocates a new Amazon Web Services DynamoDB client
-func NewAWSDynamoDB(cfg aws.Config) *dynamodb.Client {
+func NewAWSDynamoDB(localCfg Configuration, cfg aws.Config) *dynamodb.Client {
+	if localCfg.IsDev() {
+		cfg.EndpointResolver = aws.EndpointResolverFunc(func(service, region string) (aws.Endpoint, error) {
+			if service == dynamodb.ServiceID {
+				return aws.Endpoint{
+					PartitionID:       "aws",
+					HostnameImmutable: true,
+					URL:               "http://localhost:8001",
+					SigningRegion:     "localhost",
+				}, nil
+			}
+			// returning EndpointNotFoundError will allow the service to fallback to it's default resolution
+			return aws.Endpoint{}, &aws.EndpointNotFoundError{}
+		})
+	}
 	return dynamodb.NewFromConfig(cfg)
 }
 
