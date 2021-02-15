@@ -138,5 +138,6 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 func (d *AuthorDynamo) newSearchExpression() expression.ConditionBuilder {
 	partitionExp := expression.Name(dynamoDefaultPartitionKey).BeginsWith(authorAdjacencyPattern)
 	sortExp := expression.Name(dynamoDefaultSortKey).BeginsWith(authorAdjacencyPattern)
-	return expression.And(partitionExp, sortExp)
+	onlyActiveExp := expression.Name(dynamoDefaultActiveKey).Equal(expression.Value(true))
+	return expression.And(partitionExp, sortExp, onlyActiveExp)
 }

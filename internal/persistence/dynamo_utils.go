@@ -5,6 +5,7 @@ import "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 var (
 	dynamoDefaultPartitionKey = "PK"
 	dynamoDefaultSortKey      = "SK"
+	dynamoDefaultActiveKey    = "Active"
 )
 
 // marshalDynamoKey parses the given field into an AWS DynamoDB Partition Key
