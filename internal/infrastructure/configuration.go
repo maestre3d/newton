@@ -30,7 +30,7 @@ func init() {
 	viper.SetDefault("newton.http", "")
 	viper.SetDefault("newton.http.port", 8081)
 	viper.SetDefault("newton.admin_email", "luis.alonso.16@hotmail.com")
-	viper.SetDefault("newton.dynamo.table", "newton-library-dev")
+	viper.SetDefault("newton.dynamo.table", "newton-dev")
 	viper.SetDefault("newton.eventbridge.bus", "newton-dev")
 	viper.SetDefault("newton.bucket.name", "cdn.damascus-engineering.com")
 	viper.SetDefault("newton.bucket.region", "us-west-2")
