@@ -1,0 +1,314 @@
+{
+  "ModelName": "Newton Core Data Model",
+  "ModelMetadata": {
+    "Author": "Alonso Ruiz",
+    "DateCreated": "Jan 23, 2021, 04:04 AM",
+    "DateLastModified": "Feb 14, 2021, 10:06 PM",
+    "Description": "",
+    "AWSService": "Amazon DynamoDB",
+    "Version": "2.0"
+  },
+  "DataModel": [
+    {
+      "TableName": "newton-dev",
+      "KeyAttributes": {
+        "PartitionKey": {
+          "AttributeName": "PK",
+          "AttributeType": "S"
+        },
+        "SortKey": {
+          "AttributeName": "SK",
+          "AttributeType": "S"
+        }
+      },
+      "NonKeyAttributes": [
+        {
+          "AttributeName": "DisplayName",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "CreateBy",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Image",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Resource",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "PublishYear",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "TotalBooks",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "TotalViews",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "CreateTime",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "UpdateTime",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Active",
+          "AttributeType": "BOOL"
+        }
+      ],
+      "TableFacets": [
+        {
+          "FacetName": "Author",
+          "KeyAttributeAlias": {
+            "PartitionKeyAlias": "Author ID",
+            "SortKeyAlias": "Author ID"
+          },
+          "TableData": [
+            {
+              "PK": {
+                "S": "author#yD8xH67kvpQe0rF8_eDav"
+              },
+              "SK": {
+                "S": "author#yD8xH67kvpQe0rF8_eDav"
+              },
+              "DisplayName": {
+                "S": "Richard Feynmann"
+              },
+              "CreateBy": {
+                "S": "aruiz"
+              },
+              "Image": {
+                "S": "https://cdn.damascus-engineering.com/newton/authors/yD8xH67kvpQe0rF8_eDav.jpg"
+              },
+              "TotalBooks": {
+                "N": "1"
+              },
+              "CreateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "UpdateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "Active": {
+                "BOOL": true
+              }
+            },
+            {
+              "PK": {
+                "S": "author#Hsz6JA1xxl5oM-J9pGC3h"
+              },
+              "SK": {
+                "S": "author#Hsz6JA1xxl5oM-J9pGC3h"
+              },
+              "DisplayName": {
+                "S": "Paul M. Dirac"
+              },
+              "CreateBy": {
+                "S": "aruiz"
+              },
+              "Image": {
+                "S": "https://cdn.damascus-engineering.com/newton/authors/Hsz6JA1xxl5oM-J9pGC3h.jpg"
+              },
+              "TotalBooks": {
+                "N": "1"
+              },
+              "CreateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "UpdateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "Active": {
+                "BOOL": true
+              }
+            }
+          ],
+          "NonKeyAttributes": [
+            "DisplayName",
+            "CreateBy",
+            "Image",
+            "TotalBooks",
+            "CreateTime",
+            "UpdateTime",
+            "Active"
+          ]
+        },
+        {
+          "FacetName": "Book",
+          "KeyAttributeAlias": {
+            "PartitionKeyAlias": "Book ID",
+            "SortKeyAlias": "Book ID"
+          },
+          "TableData": [
+            {
+              "PK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "SK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "DisplayName": {
+                "S": "Lectures on Quantum Mechanics"
+              },
+              "CreateBy": {
+                "S": "aruiz"
+              },
+              "PublishYear": {
+                "N": "1955"
+              },
+              "TotalViews": {
+                "N": "0"
+              },
+              "CreateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "UpdateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              },
+              "Active": {
+                "BOOL": true
+              }
+            }
+          ],
+          "NonKeyAttributes": [
+            "DisplayName",
+            "CreateBy",
+            "Image",
+            "Resource",
+            "PublishYear",
+            "TotalViews",
+            "CreateTime",
+            "UpdateTime",
+            "Active"
+          ]
+        },
+        {
+          "FacetName": "Category",
+          "KeyAttributeAlias": {
+            "PartitionKeyAlias": "Category ID",
+            "SortKeyAlias": "Category ID"
+          },
+          "TableData": [
+            {
+              "PK": {
+                "S": "category#wRysMcSDowxLyZG6JqgT6"
+              },
+              "SK": {
+                "S": "category#wRysMcSDowxLyZG6JqgT6"
+              },
+              "DisplayName": {
+                "S": "Quantum Mechanics"
+              },
+              "CreateBy": {
+                "S": "aruiz"
+              },
+              "CreateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              }
+            },
+            {
+              "PK": {
+                "S": "category#FOHjjQT9LX2EP6vMfGhQZ"
+              },
+              "SK": {
+                "S": "category#FOHjjQT9LX2EP6vMfGhQZ"
+              },
+              "DisplayName": {
+                "S": "Science"
+              },
+              "CreateBy": {
+                "S": "br1"
+              },
+              "CreateTime": {
+                "S": "2006-01-02T15:04:05Z07:00"
+              }
+            }
+          ],
+          "NonKeyAttributes": [
+            "DisplayName",
+            "CreateBy",
+            "CreateTime"
+          ]
+        },
+        {
+          "FacetName": "GSI-Author-Book",
+          "KeyAttributeAlias": {
+            "PartitionKeyAlias": "Author ID",
+            "SortKeyAlias": "Book ID"
+          },
+          "TableData": [
+            {
+              "PK": {
+                "S": "author#yD8xH67kvpQe0rF8_eDav"
+              },
+              "SK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              }
+            },
+            {
+              "PK": {
+                "S": "author#Hsz6JA1xxl5oM-J9pGC3h"
+              },
+              "SK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              }
+            }
+          ]
+        },
+        {
+          "FacetName": "GSI-Category-Book",
+          "KeyAttributeAlias": {
+            "PartitionKeyAlias": "Category ID",
+            "SortKeyAlias": "Book ID"
+          },
+          "TableData": [
+            {
+              "PK": {
+                "S": "category#FOHjjQT9LX2EP6vMfGhQZ"
+              },
+              "SK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              }
+            },
+            {
+              "PK": {
+                "S": "category#wRysMcSDowxLyZG6JqgT6"
+              },
+              "SK": {
+                "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              }
+            }
+          ]
+        }
+      ],
+      "GlobalSecondaryIndexes": [
+        {
+          "IndexName": "GSI-Books",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "SK",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "PK",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        }
+      ],
+      "DataAccess": {
+        "MySql": {}
+      }
+    }
+  ]
+}
