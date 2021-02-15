@@ -18,14 +18,15 @@ var ErrAuthorIDOutOfRange = domain.NewOutOfRange("author_id", authorIDMinLength,
 
 // NewAuthorID creates and validates an AuthorID
 func NewAuthorID(v string) (AuthorID, error) {
-	if err := ensureAuthorIDLength(v); err != nil {
+	id := AuthorID(v)
+	if err := id.ensureLength(); err != nil {
 		return "", err
 	}
-	return AuthorID(v), nil
+	return id, nil
 }
 
-func ensureAuthorIDLength(v string) error {
-	if len(v) < authorIDMinLength || len(v) > authorIDMaxLength {
+func (i AuthorID) ensureLength() error {
+	if len(i) < authorIDMinLength || len(i) > authorIDMaxLength {
 		return ErrAuthorIDOutOfRange
 	}
 

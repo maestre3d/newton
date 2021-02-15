@@ -18,14 +18,15 @@ var ErrCategoryIDOutOfRange = domain.NewOutOfRange("category_id", categoryIDMinL
 
 // NewCategoryID creates and validates a CategoryID
 func NewCategoryID(v string) (CategoryID, error) {
-	if err := ensureCategoryIDLength(v); err != nil {
+	id := CategoryID(v)
+	if err := id.ensureLength(); err != nil {
 		return "", err
 	}
-	return CategoryID(v), nil
+	return id, nil
 }
 
-func ensureCategoryIDLength(v string) error {
-	if len(v) < categoryIDMinLength || len(v) > categoryIDMaxLength {
+func (i CategoryID) ensureLength() error {
+	if len(i) < categoryIDMinLength || len(i) > categoryIDMaxLength {
 		return ErrCategoryIDOutOfRange
 	}
 

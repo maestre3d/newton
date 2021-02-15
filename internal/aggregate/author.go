@@ -108,10 +108,10 @@ func (a *Author) Remove() {
 }
 
 // UploadPicture stores and overrides (if required) the current Author image
-func (a *Author) UploadPicture(imageUrl string) {
+func (a *Author) UploadPicture(imageURL string) {
 	a.Events = append(a.Events, event.AuthorImageUploaded{
 		AuthorID: a.ID.Value(),
-		Image:    imageUrl,
+		Image:    imageURL,
 	})
 }
 

@@ -19,14 +19,15 @@ var (
 
 // NewPublishYear creates and validates a PublishYear
 func NewPublishYear(v int) (PublishYear, error) {
-	if err := ensurePublishYearLength(v); err != nil {
+	year := PublishYear(v)
+	if err := year.ensureLength(); err != nil {
 		return 0, err
 	}
-	return PublishYear(v), nil
+	return year, nil
 }
 
-func ensurePublishYearLength(v int) error {
-	if v < publishYearMinValue || v > publishYearMaxValue {
+func (y PublishYear) ensureLength() error {
+	if y < publishYearMinValue || int(y) > publishYearMaxValue {
 		return ErrPublishYearOutOfRange
 	}
 	return nil

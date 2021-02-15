@@ -18,14 +18,15 @@ var ErrBookIDOutOfRange = domain.NewOutOfRange("book_id", bookIDMinLength, bookI
 
 // NewBookID creates and validates a BookID
 func NewBookID(v string) (BookID, error) {
-	if err := ensureBookIDLength(v); err != nil {
+	id := BookID(v)
+	if err := id.ensureLength(); err != nil {
 		return "", err
 	}
-	return BookID(v), nil
+	return id, nil
 }
 
-func ensureBookIDLength(v string) error {
-	if length := len(v); length < bookIDMinLength || length > bookIDMaxLength {
+func (i BookID) ensureLength() error {
+	if length := len(i); length < bookIDMinLength || length > bookIDMaxLength {
 		return ErrBookIDOutOfRange
 	}
 

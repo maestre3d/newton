@@ -17,14 +17,15 @@ var ErrTitleOutOfRange = domain.NewOutOfRange("title", titleMinLength, titleMaxL
 
 // NewTitle creates and validates a Title
 func NewTitle(v string) (Title, error) {
-	if err := ensureTitleLength(v); err != nil {
+	t := Title(v)
+	if err := t.ensureLength(); err != nil {
 		return "", err
 	}
-	return Title(v), nil
+	return t, nil
 }
 
-func ensureTitleLength(v string) error {
-	if len(v) < titleMinLength || len(v) > titleMaxLength {
+func (t Title) ensureLength() error {
+	if len(t) < titleMinLength || len(t) > titleMaxLength {
 		return ErrTitleOutOfRange
 	}
 	return nil

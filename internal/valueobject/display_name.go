@@ -17,14 +17,15 @@ var ErrDisplayNameOutOfRange = domain.NewOutOfRange("display_name", displayNameM
 
 // NewDisplayName creates and validates a DisplayName
 func NewDisplayName(v string) (DisplayName, error) {
-	if err := ensureDisplayNameLength(v); err != nil {
+	name := DisplayName(v)
+	if err := name.ensureLength(); err != nil {
 		return "", err
 	}
-	return DisplayName(v), nil
+	return name, nil
 }
 
-func ensureDisplayNameLength(v string) error {
-	if length := len(v); length < displayNameMinLength || length > displayNameMaxLength {
+func (n DisplayName) ensureLength() error {
+	if length := len(n); length < displayNameMinLength || length > displayNameMaxLength {
 		return ErrDisplayNameOutOfRange
 	}
 	return nil

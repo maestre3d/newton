@@ -31,22 +31,24 @@ var (
 
 // NewImage creates and validates an Image
 func NewImage(v string) (Image, error) {
+	img := Image(v)
 	if err := ensureValidURL(v, ErrImageInvalidURL); err != nil {
 		return "", err
 	} else if err := ensureURLLength(v, ErrImageOutOfRange); err != nil {
 		return "", err
-	} else if err := ensureImageValidExtension(v); err != nil {
+	} else if err := img.ensureValidExtension(); err != nil {
 		return "", err
 	}
-	return Image(v), nil
+	return img, nil
 }
 
-func ensureImageValidExtension(v string) error {
-	isInvalidExtension := !strings.HasSuffix(v, ImageValidExtension0) &&
-		!strings.HasSuffix(v, ImageValidExtension0Uppercase) && !strings.HasSuffix(v, ImageValidExtension1) &&
-		!strings.HasSuffix(v, ImageValidExtension1Uppercase) && !strings.HasSuffix(v, ImageValidExtension2) &&
-		!strings.HasSuffix(v, ImageValidExtension2Uppercase) && !strings.HasSuffix(v, ImageValidExtension3) &&
-		!strings.HasSuffix(v, ImageValidExtension3Uppercase)
+func (i Image) ensureValidExtension() error {
+	strImage := string(i)
+	isInvalidExtension := !strings.HasSuffix(strImage, ImageValidExtension0) &&
+		!strings.HasSuffix(strImage, ImageValidExtension0Uppercase) && !strings.HasSuffix(strImage, ImageValidExtension1) &&
+		!strings.HasSuffix(strImage, ImageValidExtension1Uppercase) && !strings.HasSuffix(strImage, ImageValidExtension2) &&
+		!strings.HasSuffix(strImage, ImageValidExtension2Uppercase) && !strings.HasSuffix(strImage, ImageValidExtension3) &&
+		!strings.HasSuffix(strImage, ImageValidExtension3Uppercase)
 	if isInvalidExtension {
 		return ErrImageInvalidExtension
 	}

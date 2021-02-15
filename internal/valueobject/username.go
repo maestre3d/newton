@@ -17,15 +17,17 @@ const (
 // ErrUsernameOutOfRange the given username char length is out of range
 var ErrUsernameOutOfRange = domain.NewOutOfRange("username", usernameMinLength, usernameMaxLength)
 
+// NewUsername creates and validates a Username
 func NewUsername(v string) (Username, error) {
-	if err := ensureUsernameLength(v); err != nil {
+	u := Username(v)
+	if err := u.ensureLength(); err != nil {
 		return "", err
 	}
-	return Username(v), nil
+	return u, nil
 }
 
-func ensureUsernameLength(v string) error {
-	if len(v) < usernameMinLength || len(v) > usernameMaxLength {
+func (u Username) ensureLength() error {
+	if len(u) < usernameMinLength || len(u) > usernameMaxLength {
 		return ErrUsernameOutOfRange
 	}
 	return nil

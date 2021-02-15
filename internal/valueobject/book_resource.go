@@ -25,18 +25,19 @@ var (
 
 // NewBookResource creates and validates a BookResource
 func NewBookResource(v string) (BookResource, error) {
+	r := BookResource(v)
 	if err := ensureValidURL(v, ErrBookResourceInvalidURL); err != nil {
 		return "", err
 	} else if err := ensureURLLength(v, ErrBookResourceOutOfRange); err != nil {
 		return "", err
-	} else if err := ensureBookResourceValidExtension(v); err != nil {
+	} else if err := r.ensureValidExtension(); err != nil {
 		return "", err
 	}
-	return BookResource(v), nil
+	return r, nil
 }
 
-func ensureBookResourceValidExtension(v string) error {
-	if !strings.HasSuffix(v, "."+bookResourceValidExtension) && !strings.HasSuffix(v,
+func (r BookResource) ensureValidExtension() error {
+	if !strings.HasSuffix(string(r), "."+bookResourceValidExtension) && !strings.HasSuffix(string(r),
 		"."+bookResourceValidExtensionUppercase) {
 		return ErrBookResourceInvalidExtension
 	}
