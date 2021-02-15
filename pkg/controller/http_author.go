@@ -14,7 +14,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
-// BookHTTP aggregate.Author HTTP endpoints
+// AuthorHTTP aggregate.Author HTTP endpoints
 type AuthorHTTP struct {
 	app *application.Author
 }
@@ -70,8 +70,11 @@ func (h AuthorHTTP) create(w http.ResponseWriter, r *http.Request) {
 
 func (h AuthorHTTP) list(w http.ResponseWriter, r *http.Request) {
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+	filter := *repository.NewCriteria(limit, r.URL.Query().Get("next_page"))
+	filter.ActiveOnly, _ = strconv.ParseBool(r.URL.Query().Get("active_only"))
+
 	as, err := query.ListAuthorsHandle(h.app, r.Context(), query.ListAuthors{
-		Criteria: *repository.NewCriteria(limit, r.URL.Query().Get("next_page")),
+		Criteria: filter,
 	})
 	if err != nil {
 		httputil.RespondErrJSON(w, r, err)

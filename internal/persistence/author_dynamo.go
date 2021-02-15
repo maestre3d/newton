@@ -108,7 +108,7 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	exp, _ := expression.NewBuilder().WithFilter(d.newSearchExpression()).
+	exp, _ := expression.NewBuilder().WithFilter(d.newSearchExpression(criteria)).
 		WithProjection(d.newProjectionExpression()).Build()
 	o, err := d.db.Scan(ctx, &dynamodb.ScanInput{
 		TableName:                 aws.String(d.cfg.DynamoTable),
@@ -135,9 +135,12 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	return authors, unmarshalDynamoKey(dynamoDefaultPartitionKey, o.LastEvaluatedKey), nil
 }
 
-func (d *AuthorDynamo) newSearchExpression() expression.ConditionBuilder {
+func (d *AuthorDynamo) newSearchExpression(criteria repository.Criteria) expression.ConditionBuilder {
 	partitionExp := expression.Name(dynamoDefaultPartitionKey).BeginsWith(authorAdjacencyPattern)
 	sortExp := expression.Name(dynamoDefaultSortKey).BeginsWith(authorAdjacencyPattern)
-	onlyActiveExp := expression.Name(dynamoDefaultActiveKey).Equal(expression.Value(true))
-	return expression.And(partitionExp, sortExp, onlyActiveExp)
+	other := make([]expression.ConditionBuilder, 0)
+	if criteria.ActiveOnly {
+		other = append(other, expression.Name(dynamoDefaultActiveKey).Equal(expression.Value(criteria.ActiveOnly)))
+	}
+	return expression.And(partitionExp, sortExp, other...)
 }
