@@ -14,6 +14,7 @@ type Author struct {
 	ID          valueobject.AuthorID
 	DisplayName valueobject.DisplayName
 	CreateBy    valueobject.Username
+	TotalBooks  valueobject.TotalBooks
 	Image       valueobject.Image
 
 	Metadata valueobject.Metadata
@@ -39,6 +40,7 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 		ID:          id,
 		DisplayName: name,
 		CreateBy:    createBy,
+		TotalBooks:  valueobject.TotalBooks(0),
 		Image:       image,
 		Metadata: valueobject.Metadata{
 			CreateTime:     currentTime,
@@ -60,10 +62,12 @@ func NewAuthor(id valueobject.AuthorID, name valueobject.DisplayName, createBy v
 }
 
 // Update performs a bulk modification
-func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Username, image valueobject.Image) {
+func (a *Author) Update(name valueobject.DisplayName, createBy valueobject.Username, totalBooks valueobject.TotalBooks,
+	image valueobject.Image) {
 	currentTime := time.Now().UTC()
 	a.DisplayName = name
 	a.CreateBy = createBy
+	a.TotalBooks = totalBooks
 	a.Image = image
 	a.Metadata.UpdateTime = currentTime
 	a.Metadata.MarkAsMutation = true

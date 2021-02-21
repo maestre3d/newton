@@ -3,7 +3,7 @@
   "ModelMetadata": {
     "Author": "Alonso Ruiz",
     "DateCreated": "Jan 23, 2021, 04:04 AM",
-    "DateLastModified": "Feb 14, 2021, 10:06 PM",
+    "DateLastModified": "Feb 20, 2021, 05:20 PM",
     "Description": "",
     "AWSService": "Amazon DynamoDB",
     "Version": "2.0"
@@ -79,7 +79,7 @@
                 "S": "author#yD8xH67kvpQe0rF8_eDav"
               },
               "DisplayName": {
-                "S": "Richard Feynmann"
+                "S": "Richard Feynman"
               },
               "CreateBy": {
                 "S": "aruiz"
@@ -91,10 +91,10 @@
                 "N": "1"
               },
               "CreateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "UpdateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "Active": {
                 "BOOL": true
@@ -120,13 +120,42 @@
                 "N": "1"
               },
               "CreateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "UpdateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "Active": {
                 "BOOL": true
+              }
+            },
+            {
+              "PK": {
+                "S": "author#tlTMmhDFv1CjvJEvk3Gj0-J9pGC3h"
+              },
+              "SK": {
+                "S": "author#tlTMmhDFv1CjvJEvk3Gj0-J9pGC3h"
+              },
+              "DisplayName": {
+                "S": "Albert Einstein"
+              },
+              "CreateBy": {
+                "S": "br1"
+              },
+              "Image": {
+                "S": "https://cdn.damascus-engineering.com/newton/authors/tlTMmhDFv1CjvJEvk3Gj0.jpg"
+              },
+              "TotalBooks": {
+                "N": "0"
+              },
+              "CreateTime": {
+                "S": "2021-01-01T15:00:00Z"
+              },
+              "UpdateTime": {
+                "S": "2021-01-01T15:00:00Z"
+              },
+              "Active": {
+                "BOOL": false
               }
             }
           ],
@@ -138,7 +167,10 @@
             "CreateTime",
             "UpdateTime",
             "Active"
-          ]
+          ],
+          "DataAccess": {
+            "MySql": {}
+          }
         },
         {
           "FacetName": "Book",
@@ -167,10 +199,10 @@
                 "N": "0"
               },
               "CreateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "UpdateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               },
               "Active": {
                 "BOOL": true
@@ -187,7 +219,10 @@
             "CreateTime",
             "UpdateTime",
             "Active"
-          ]
+          ],
+          "DataAccess": {
+            "MySql": {}
+          }
         },
         {
           "FacetName": "Category",
@@ -210,7 +245,7 @@
                 "S": "aruiz"
               },
               "CreateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               }
             },
             {
@@ -227,7 +262,7 @@
                 "S": "br1"
               },
               "CreateTime": {
-                "S": "2006-01-02T15:04:05Z07:00"
+                "S": "2021-01-01T15:00:00Z"
               }
             }
           ],
@@ -235,7 +270,10 @@
             "DisplayName",
             "CreateBy",
             "CreateTime"
-          ]
+          ],
+          "DataAccess": {
+            "MySql": {}
+          }
         },
         {
           "FacetName": "GSI-Author-Book",
@@ -250,6 +288,12 @@
               },
               "SK": {
                 "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "DisplayName": {
+                "S": "Richard Feynman"
+              },
+              "Image": {
+                "S": "https://cdn.damascus-engineering.com/newton/authors/yD8xH67kvpQe0rF8_eDav.jpg"
               }
             },
             {
@@ -258,9 +302,22 @@
               },
               "SK": {
                 "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "DisplayName": {
+                "S": "Paul M. Dirac"
+              },
+              "Image": {
+                "S": "https://cdn.damascus-engineering.com/newton/authors/Hsz6JA1xxl5oM-J9pGC3h.jpg"
               }
             }
-          ]
+          ],
+          "NonKeyAttributes": [
+            "DisplayName",
+            "Image"
+          ],
+          "DataAccess": {
+            "MySql": {}
+          }
         },
         {
           "FacetName": "GSI-Category-Book",
@@ -275,6 +332,9 @@
               },
               "SK": {
                 "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "DisplayName": {
+                "S": "Quantum Mechanics"
               }
             },
             {
@@ -283,9 +343,19 @@
               },
               "SK": {
                 "S": "book#2adqB9q0C2cx1ikhYeT8P"
+              },
+              "DisplayName": {
+                "S": "Science"
               }
             }
-          ]
+          ],
+          "NonKeyAttributes": [
+            "DisplayName",
+            "Image"
+          ],
+          "DataAccess": {
+            "MySql": {}
+          }
         }
       ],
       "GlobalSecondaryIndexes": [
@@ -294,6 +364,22 @@
           "KeyAttributes": {
             "PartitionKey": {
               "AttributeName": "SK",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "PK",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        },
+        {
+          "IndexName": "GSI-AggregatesByUser",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "CreateBy",
               "AttributeType": "S"
             },
             "SortKey": {

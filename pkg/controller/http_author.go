@@ -3,13 +3,11 @@ package controller
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/maestre3d/newton/internal/application"
 	"github.com/maestre3d/newton/internal/command"
 	"github.com/maestre3d/newton/internal/query"
-	"github.com/maestre3d/newton/internal/repository"
 	"github.com/maestre3d/newton/pkg/httputil"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
@@ -69,12 +67,13 @@ func (h AuthorHTTP) create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h AuthorHTTP) list(w http.ResponseWriter, r *http.Request) {
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	filter := *repository.NewCriteria(limit, r.URL.Query().Get("next_page"))
-	filter.ActiveOnly, _ = strconv.ParseBool(r.URL.Query().Get("active_only"))
+	criteria, err := httputil.UnmarshalCriteriaJSON(r)
+	if err != nil {
+		criteria = httputil.UnmarshalCriteria(r)
+	}
 
 	as, err := query.ListAuthorsHandle(h.app, r.Context(), query.ListAuthors{
-		Criteria: filter,
+		Criteria: criteria,
 	})
 	if err != nil {
 		httputil.RespondErrJSON(w, r, err)

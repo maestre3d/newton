@@ -6,10 +6,11 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/maestre3d/newton/internal/aggregate"
 	"github.com/maestre3d/newton/internal/infrastructure"
+	"github.com/maestre3d/newton/internal/persistence/builder"
+	"github.com/maestre3d/newton/internal/persistence/model"
 	"github.com/maestre3d/newton/internal/repository"
 	"github.com/maestre3d/newton/internal/valueobject"
 )
@@ -30,15 +31,6 @@ func NewAuthorDynamo(cfg infrastructure.Configuration, db *dynamodb.Client) *Aut
 	}
 }
 
-var (
-	// authorAdjacencyPattern string pattern for author schemas using Amazon Web Services DynamoDB's
-	// Adjacency List pattern.
-	//
-	// A more detailed information can be found here:
-	// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-adjacency-graphs.html
-	authorAdjacencyPattern = "author#"
-)
-
 // Save stores, update or deletes the given record
 func (d *AuthorDynamo) Save(ctx context.Context, author aggregate.Author) error {
 	d.mu.Lock()
@@ -50,7 +42,7 @@ func (d *AuthorDynamo) Save(ctx context.Context, author aggregate.Author) error 
 }
 
 func (d *AuthorDynamo) putItem(ctx context.Context, author aggregate.Author) error {
-	authorDb, err := attributevalue.MarshalMap(marshalAuthorDynamo(author))
+	authorDb, err := attributevalue.MarshalMap(model.MarshalAuthorDynamo(author))
 	if err != nil {
 		return err
 	}
@@ -63,8 +55,8 @@ func (d *AuthorDynamo) putItem(ctx context.Context, author aggregate.Author) err
 
 func (d *AuthorDynamo) deleteItem(ctx context.Context, author aggregate.Author) error {
 	_, err := d.db.DeleteItem(ctx, &dynamodb.DeleteItemInput{
-		Key: marshalDynamoKeyWithSort(dynamoDefaultPartitionKey, dynamoDefaultSortKey,
-			authorAdjacencyPattern+author.ID.Value()),
+		Key: model.MarshalDynamoKeyWithSort(model.DynamoPartitionKey, model.DynamoSortKey,
+			model.AuthorAdjacencyPattern+author.ID.Value()),
 		TableName: aws.String(d.cfg.DynamoTable),
 	})
 	return err
@@ -75,30 +67,24 @@ func (d *AuthorDynamo) Get(ctx context.Context, id valueobject.AuthorID) (*aggre
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	exp, _ := expression.NewBuilder().WithProjection(d.newProjectionExpression()).Build()
-	o, err := d.db.GetItem(ctx, &dynamodb.GetItemInput{
-		Key: marshalDynamoKeyWithSort(dynamoDefaultPartitionKey, dynamoDefaultSortKey,
-			authorAdjacencyPattern+id.Value()),
-		TableName:                aws.String(d.cfg.DynamoTable),
-		ExpressionAttributeNames: exp.Names(),
-		ProjectionExpression:     exp.Projection(),
-		ConsistentRead:           aws.Bool(false),
-	})
+	build := builder.BuildAuthorDynamo(d.db, d.cfg, d.constructCriteriaGetUser(id))
+	authors, _, err := build.Exec(ctx)
 	if err != nil {
 		return nil, err
-	} else if o.Item == nil {
+	} else if len(authors) < 1 {
 		return nil, nil
 	}
-	author := authorDynamoSchema{}
-	if err = attributevalue.UnmarshalMap(o.Item, &author); err != nil {
-		return nil, err
-	}
-	return unmarshalAuthorDynamo(author)
+	return authors[0], nil
 }
 
-func (d *AuthorDynamo) newProjectionExpression() expression.ProjectionBuilder {
-	return expression.NamesList(expression.Name("PK"), expression.Name("SK"), expression.Name("DisplayName"), expression.Name("CreateTime"),
-		expression.Name("UpdateTime"), expression.Name("Active"), expression.Name("CreateBy"), expression.Name("Image"))
+func (d *AuthorDynamo) constructCriteriaGetUser(id valueobject.AuthorID) repository.Criteria {
+	return repository.Criteria{
+		Query: repository.Query{
+			Filters: map[string]repository.Filter{
+				model.AuthorIdKey: {Condition: repository.EqualsCondition, Value: id.Value()},
+			},
+		},
+	}
 }
 
 // Search returns a list of the current aggregate filtering and ordering by the given criteria, returns the
@@ -108,39 +94,6 @@ func (d *AuthorDynamo) Search(ctx context.Context, criteria repository.Criteria)
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	exp, _ := expression.NewBuilder().WithFilter(d.newSearchExpression(criteria)).
-		WithProjection(d.newProjectionExpression()).Build()
-	o, err := d.db.Scan(ctx, &dynamodb.ScanInput{
-		TableName:                 aws.String(d.cfg.DynamoTable),
-		Limit:                     aws.Int32(int32(criteria.Limit)),
-		ExpressionAttributeNames:  exp.Names(),
-		ExpressionAttributeValues: exp.Values(),
-		FilterExpression:          exp.Filter(),
-		ProjectionExpression:      exp.Projection(),
-		ExclusiveStartKey:         marshalDynamoKeyWithSort(dynamoDefaultPartitionKey, dynamoDefaultSortKey, criteria.NextPage),
-	})
-	if err != nil {
-		return nil, "", err
-	} else if len(o.Items) == 0 {
-		return nil, "", nil
-	}
-	authorsPrimitive := make([]authorDynamoSchema, 0)
-	if err = attributevalue.UnmarshalListOfMaps(o.Items, &authorsPrimitive); err != nil {
-		return nil, "", err
-	}
-	authors, err := unmarshalAuthorDynamoBulk(authorsPrimitive)
-	if err != nil {
-		return nil, "", err
-	}
-	return authors, unmarshalDynamoKey(dynamoDefaultPartitionKey, o.LastEvaluatedKey), nil
-}
-
-func (d *AuthorDynamo) newSearchExpression(criteria repository.Criteria) expression.ConditionBuilder {
-	partitionExp := expression.Name(dynamoDefaultPartitionKey).BeginsWith(authorAdjacencyPattern)
-	sortExp := expression.Name(dynamoDefaultSortKey).BeginsWith(authorAdjacencyPattern)
-	other := make([]expression.ConditionBuilder, 0)
-	if criteria.ActiveOnly {
-		other = append(other, expression.Name(dynamoDefaultActiveKey).Equal(expression.Value(criteria.ActiveOnly)))
-	}
-	return expression.And(partitionExp, sortExp, other...)
+	build := builder.BuildAuthorDynamo(d.db, d.cfg, criteria)
+	return build.Exec(ctx)
 }

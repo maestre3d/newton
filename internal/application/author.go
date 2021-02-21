@@ -103,7 +103,7 @@ func (a *Author) Modify(ctx context.Context, id valueobject.AuthorID, name value
 		author.Image = image
 	}
 
-	author.Update(author.DisplayName, author.CreateBy, author.Image)
+	author.Update(author.DisplayName, author.CreateBy, author.TotalBooks, author.Image)
 	if err = a.repo.Save(ctx, *author); err != nil {
 		return err
 	} else if err = a.bus.Publish(ctx, author.PullEvents()...); a.bus != nil && err != nil {
