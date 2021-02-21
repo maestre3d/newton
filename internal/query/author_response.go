@@ -11,6 +11,7 @@ type authorResponse struct {
 	AuthorID    string `json:"author_id"`
 	DisplayName string `json:"display_name"`
 	CreateBy    string `json:"create_by"`
+	TotalBooks  int    `json:"total_books"`
 	Image       string `json:"image"`
 	LastUpdate  string `json:"last_update"`
 }
@@ -21,6 +22,7 @@ func marshalAuthorResponse(a aggregate.Author) *authorResponse {
 		AuthorID:    a.ID.Value(),
 		DisplayName: a.DisplayName.Value(),
 		CreateBy:    a.CreateBy.Value(),
+		TotalBooks:  int(a.TotalBooks.Value()),
 		Image:       a.Image.Value(),
 		LastUpdate:  a.Metadata.UpdateTime.Format(time.RFC3339),
 	}
