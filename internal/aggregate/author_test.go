@@ -2,6 +2,7 @@ package aggregate
 
 import (
 	"testing"
+	"time"
 
 	"github.com/maestre3d/newton/internal/valueobject"
 	gonanoid "github.com/matoous/go-nanoid/v2"
@@ -77,15 +78,16 @@ func TestAuthor_Update(t *testing.T) {
 	t.Run("Author update", func(t *testing.T) {
 		author := NewAuthor(authorStubDTO.ID, authorStubDTO.Name, authorStubDTO.CreateBy,
 			authorStubDTO.Image)
-		oldUpdateTime := author.Metadata.UpdateTime
+		oldUpdateTime := author.Metadata.UpdateTime.Add(-time.Hour * 1)
 		image, _ := valueobject.NewImage("https://foo.com/bar.jpg")
 		createdBy, _ := valueobject.NewUsername("br1")
+		totalBooks, _ := valueobject.NewTotalBooks(1)
 		name, _ := valueobject.NewDisplayName("Max Born")
-		author.Update(name, createdBy, image)
+		author.Update(name, createdBy, totalBooks, image)
 		assert.NotEqual(t, authorStubDTO.CreateBy.Value(), author.CreateBy.Value())
 		assert.NotEqual(t, authorStubDTO.Image.Value(), author.Image.Value())
 		assert.NotEqual(t, authorStubDTO.Name.Value(), author.DisplayName.Value())
-		assert.NotEqualValues(t, oldUpdateTime, author.Metadata.UpdateTime)
+		assert.NotEqual(t, oldUpdateTime, author.Metadata.UpdateTime)
 		assert.Equal(t, 2, len(author.PullEvents()))
 	})
 }
